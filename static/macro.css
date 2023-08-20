@@ -76,22 +76,17 @@
   transform: scale(1.1);
 }
 
-.new_card:hover .title{
-  transform: translateX(-50%) translateY(-190px);
-  color: white;
-}
+
 
 .new_card:hover .overlay{
   transform: translateX(-50%) translateY(-250px);
 }
 
-.new_card:hover .description{
-  transform: translateX(-50%) translateY(-175px);
-  opacity: 1;
-  color: white;
-}
+
 
 .new_card:hover .card-buttons{
-  transform: translateX(-50%) translateY(-65px);
+  transform: translateX(-50%) translateY(-150px);
 }
-
+.card-btn{
+  background-color: #ffc700;
+}

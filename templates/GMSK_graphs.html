@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<!-- <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,9 +35,13 @@
         setTimeout("location.reload(true);", 5);
      }
 </script>
-</head>
-<body>
-  <nav>
+</head> -->
+{% include 'head.html' %}
+<body class="graph-body">
+  {% with title= title %}
+    {% include 'nav.html' %}
+  {%endwith%}
+  <!-- <nav>
     <h1 class="heading">{{title}}</h1>
     <div class="buttons-nav">
       <button class="back-button" style="right: calc(5vw + 45px);">
@@ -51,8 +55,8 @@
         </a>
       </button>  
     </div>
-  </nav>
-<div class="container-full">
+  </nav> -->
+<div class="container-full" id="graph-back">
 
   <form action="/DM2/{{dmtype}}" method="POST">
     <div class="inputs"> 

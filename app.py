@@ -12,70 +12,73 @@ import logging
 import json
 
 
-logger = logging.getLogger('waitress')
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('waitress') # A logger is used to record events and messages during the program's execution
+logger.setLevel(logging.INFO) # This line sets the logging level of the logger to INFO. The logging level determines the importance of messages to be logged
 
-matplotlib.use('WebAgg')
+matplotlib.use('WebAgg')# WebAgg is a backend that's suitable for rendering plots in web applications.
 
-load_dotenv()
+load_dotenv()#  This line calls a function to load environment variables from a file named .env in the current directory.
 
-app=Flask(__name__,static_url_path='/static')
+app=Flask(__name__,static_url_path='/static') # creates a Flask web application
 CORS(app)
 
 
-@app.template_filter('decode_hex')
+@app.template_filter('decode_hex') # function to decode hex
 def decode_hex(s):
     return unhexlify(s)
 
 
-@app.template_filter('b64encode')
+@app.template_filter('b64encode') # Base64 is a binary-to-text encoding scheme
 def b64encode(s):
-    return base64.b64encode(s).decode('utf-8')
+    return base64.b64encode(s).decode('utf-8') # first we encode in base64 format and then decode it in unistring format so that it can be displayed in text fields,email etc
 
 @app.route('/',methods=['GET'])
 def home():
-    f = open('./data.json')
-    data = json.load(f)["Home"]
-    return render_template('home.html',data=data)
+    f = open('./data.json')# opens data.json
+    data = json.load(f)["Home"] # loads data named HOME from data.json
+    return render_template('home.html',data=data) # This renders the home.html file and passes data to home.html
 
 @app.route('/references',methods=['GET'])
 def references():
     return render_template('references.html')
 
 @app.route('/theory/<modulation_type>',methods=["GET"])
-def theory(modulation_type):
+def theory(modulation_type): # this function takes modulation type as input renders appropriate pages
     return render_template(f'theory/{modulation_type}.html')
+
+
+
 
 # ---------- Analog Modulation -------------------
 @app.route('/AM',methods=['GET'])
 def AM_page():
     f = open('./data.json')
-    data = json.load(f)["AM"]
-    return render_template('Analog_Modulation.html',data=data)
+    data = json.load(f)["AM"] # loads AM form data.json
+    return render_template('Analog_Modulation.html',data=data) # renders analog_modulation.html and passed data to it
 
-@app.route('/AM/<am_type>',methods=['GET','POST'])
+@app.route('/AM/<am_type>',methods=['GET','POST']) # get and post methods for specific am type
 def Amplitutde_Modulation(am_type):  
     
-    title = {"MAIN":"Amplitutde Modulation","SSB":"SSB Modulation","DSBSC":"DSB Modulation","QAM":"QAM Modulation"}
-    plots = []
-    x_message = []
-    x_carrier = []
-    if (request.method=='POST'):
-        content = request.form
+    title = {"MAIN":"Amplitutde Modulation","SSB":"SSB Modulation","DSBSC":"DSB Modulation","QAM":"QAM Modulation"} # title depends on the am type
+    plots = [] # This is an empty list that will hold the generated plots for the AM scenario
+    x_message = [] # for holding message signal data for plotting
+    x_carrier = [] # for holding carrier signal data for plotting
+    if (request.method=='POST'): # if the method is post
+        content = request.form  # the form contents are stored in content
         fm=int(content['fm'])
         fc=int(content['fc'])
-        Am=int(content['Am'])
+        Am=int(content['Am'])     # all the contents are stored in seperate variables
         Ac=int(content['Ac'])
-        errMsg = ""
-        message_signal = str(content['message_signal'])
-        if(Am>Ac or fm>fc):
+        errMsg = "" # initializes error message
+        message_signal = str(content['message_signal']) # stores message_signale with the message_signal string passed in the form content
+        if(Am>Ac or fm>fc): # conditions which are not possible
             errMsg = "The given plot is not possible. Because Fc <Fm or Ac<Am"
-        inputs = {"Am":Am,"Ac":Ac,"fm":fm,"fc":fc,"message_signal":message_signal}
+        inputs = {"Am":Am,"Ac":Ac,"fm":fm,"fc":fc,"message_signal":message_signal} # stores the inputs in seperate variables inside the 'inputs'
         
         if am_type == "MAIN":
             plots = AM_main_graph(inputs)
         elif am_type == "SSB":
-            plots = AM_ssb_modulation(inputs)
+            plots = AM_ssb_modulation(inputs)     # plots differnet graphs according to the input
         elif am_type == "DSBSC":
             inputs["phi"] = 1
             plots = AM_double_sideband_modulation(inputs)
@@ -86,31 +89,31 @@ def Amplitutde_Modulation(am_type):
         return render_template('AM_graphs.html',am_type=am_type.upper(),title=title[am_type],plots = plots,inputs=inputs,errMsg=errMsg)
     return render_template('AM_graphs.html',am_type=am_type.upper(),title=title[am_type],plots = plots)
 
-@app.route('/FM/<index>',methods=['GET','POST'])
+@app.route('/FM/<index>',methods=['GET','POST']) # this is the get and post method for fm type
 def FM(index):
-    images = []
-    index = int(index)
-    inputs = {}
+    images = [] # for storing images
+    index = int(index) # index can be 1 or to for fm or pm
+    inputs = {} # for storing input values
     errMsg = ""
-    title={1:"Frequency modulation",2:"Phase modulation"}
+    title={1:"Frequency modulation",2:"Phase modulation"} # if index is 1 fm or if index is 2 pm
     if request.method == 'POST':
         fm=int (request.form['fm'])
         fc=int (request.form['fc'])
         Am=int (request.form['Am'])
         Ac=int (request.form['Ac'])
-        message_signal = str(request.form['message_signal'])
+        message_signal = str(request.form['message_signal']) # gets message signal value
         K = int(request.form['K'])
         if(fc<fm or Ac<Am):
             errMsg = "Given graph is Not possible as Fc <Fm or Ac<Am." 
         inputs = {"Am":Am,"Ac":Ac,"fm":fm,"fc":fc,"message_signal":message_signal,"K":K}
-        x = np.linspace(-200,200,10000) #domain for the modulated_wave
-        s = [1 for i in x]
-        if(index==1):
-            images = FM_MAIN(x,inputs)           
+        # = np.linspace(-200,200,10000)  #domain for the modulated_wave
+        #s = [1 for i in x] # looks like its an impulse
+        if(index==1):   # if index is 1 then fm is called and result is stored in images
+            images = FM_MAIN(inputs)           
         elif(index==2):
-            images = PHASE_MAIN(x,inputs) 
+            images = PHASE_MAIN(inputs) 
       
-    return render_template('fm_graphs.html',title=title[index],index=index,plots=images,inputs=inputs,errMsg=errMsg)
+    return render_template('fm_graphs.html',title=title[index],index=index,plots=images,inputs=inputs,errMsg=errMsg) #renders appropriate images in fm_graphs.html
 
 # ---------- End of Analog Modulation ------------
 
@@ -124,7 +127,7 @@ def DM_page():
     return render_template('Digital_Modulation.html',data=data)
 
 
-@app.route('/DM/<dmtype>', methods=['GET','POST'])
+@app.route('/DM/<dmtype>', methods=['GET','POST'])  # get and post for dm
 def DigitalModulation(dmtype):
     title = {"BPSK":"BPSK Modulation","BFSK":"BFSK Modulation","BASK":"BASK Modulation","QPSK":"QPSK Modulation"}
     plots = []
@@ -140,7 +143,8 @@ def DigitalModulation(dmtype):
           fc2=int (request.form['fc2'])
 
       # Change Binary string to array
-      inputBinarySeq = np.array(list(binaryInput), dtype=int)
+      inputBinarySeq = np.array(list(binaryInput), dtype=int) # converts binary input into array
+
 
       if dmtype.upper() == 'BASK':
           plots = BASK(Tb, fc, inputBinarySeq)
@@ -152,7 +156,7 @@ def DigitalModulation(dmtype):
           plots = QPSK(Tb, fc, inputBinarySeq)
     return render_template('DM_graphs.html',dmtype=dmtype.upper(),title=title[dmtype], plots=plots,inputs=inputs)
 
-@app.route('/DM2/<dmtype>', methods=['GET','POST'])
+@app.route('/DM2/<dmtype>', methods=['GET','POST'])   # get and post for gmsk
 def GMSK_Modulation(dmtype):
     title = {"GMSK":"GMSK Modulation"}
     plots = []
@@ -170,7 +174,7 @@ def GMSK_Modulation(dmtype):
     return render_template('GMSK_graphs.html',dmtype=dmtype.upper(),title=title[dmtype], plots=plots,inputs=inputs)    
 
 
-@app.route('/DM3/<dmtype>', methods=['GET','POST'])
+@app.route('/DM3/<dmtype>', methods=['GET','POST']) # get and post for dpsk
 def DPSK_Modulation(dmtype):
     title = {"DPSK":"DPSK Modulation"}
     plots = []
@@ -192,49 +196,76 @@ def DPSK_Modulation(dmtype):
 
 # ---------- Pulse Modulation ---------------------
 
-# @app.route('/PM',methods=['GET'])
-# def PM_page():
-#     f = open('./data.json')
-#     data = json.load(f)["PM"]
-#     return render_template('Pulse_Modulation.html',data=data)
+@app.route('/PM',methods=['GET'])
+def PM_page():
+    f = open('./data.json')
+    data = json.load(f)["PM"]
+    return render_template('Pulse_Modulation.html',data=data)
 
 
-# @app.route('/PM/<pmtype>', methods=['GET','POST'])
-# def PulseModulation(pmtype):
-#     title = {"Sampling":"Sampling",
-#              "Quantization":"Quantization",
-#              "PAM":"Pulse Amplitude Modulation",
-#              "PPM":"Pulse Phase Modulation",
-#              "PCM":"Pulse Position Modulation",
-#              "PWM":"Pulse Width Modulation"
-#              }
-#     plots = []
-#     inputs = []
-#     print(request.form)
-#     if (request.method=='POST'):
-#         fm = int (request.form['fm'])
-#         am = int (request.form['am'])
-#         fc = int (request.form['fc'])
-#         ac = int (request.form['ac'])
-#         message_type = str(request.form["message_signal"])
-#         inputs = [am,ac,fm,fc,message_type]
+@app.route('/PM/<pmtype>', methods=['GET','POST'])
+def PulseModulation(pmtype):
+    encoded=''
+    #quantized_value = ''
+    title = {"SAMPLING":"Sampling",
+             "QUANTIZATION":"Quantization",
+             "PAM":"Pulse Amplitude Modulation",
+             "PPM":"Pulse Phase Modulation",
+             "PCM":"Pulse Code Modulation",
+             "PWM":"Pulse Width Modulation"
+             }
+    plots = []
+    inputs = []
+    print(request.form)
+    if (request.method=='POST'): 
+        # fm = int (request.form['fm'])
+        # am = int (request.form['am'])
+        # fc = int (request.form['fc'])
+        # ac = int (request.form['ac'])
+        fm = int (request.form['fm'])
+        am = int (request.form['am'])
+        message_type = str(request.form["message_signal"])
 
-#       # Change Binary string to array
-#         print(pmtype)
-#         if pmtype.upper() == 'PPM':
-#             ppm_ratio = float(request.form['ppm_ratio'])        
-#             inputs.append(ppm_ratio)
-#             plots = PPM(inputs)
-#         elif pmtype.upper() == 'PAM':
-#           inputs.append(int(request.form['fs']))
-#           plots = PAM(inputs)
-#         elif pmtype.upper() == 'BPSK':
-#           plots = BPSK(Tb, fc, inputBinarySeq)
-#         elif pmtype.upper() == 'QPSK':
-#           plots = QPSK(Tb, fc, inputBinarySeq)
+        inputs = [fm,am,message_type]
 
-#     return render_template('PM_graphs.html',pmtype=pmtype.upper(),title=title[pmtype], plots=plots)
+      # Change Binary string to array
+        print(pmtype)
+        if pmtype.upper() == 'PPM':
+            inputs.append(int(request.form['ql']))
+            ppm_ratio = float(request.form['ppm_ratio'])        
+            inputs.append(ppm_ratio)
+            inputs.append(int(request.form['nb']))
+            plots = PPM(inputs)
+        elif pmtype.upper() == 'PAM':
+          inputs.append(int(request.form['fs']))
+          plots = PAM(inputs)
+        elif pmtype.upper() == 'PWM':
+          inputs.append(int(request.form['fs']))
+          plots = PWM(inputs)
+        elif pmtype.upper() == 'PCM':
+          inputs.append(int(request.form['ql']))
+          inputs.append(int(request.form['nb']))
+          a,b,c,encoded= PCM(inputs)
+          #encoded = "encoded"
+          #encoded_str = ''.join(encoded)
+          plots = [a,b,c]
+        elif pmtype.upper() == 'SAMPLING':
+          inputs.append(int(request.form['fs']))
+          plots = SAMPLING(inputs)
+        elif pmtype.upper() == 'QUANTIZATION':
+          #inputs.append(int(request.form['fs']))
+          plots = QUANTIZATION(inputs)
 
+        # elif pmtype.upper() == 'BPSK':
+        #   plots = BPSK(Tb, fc, inputBinarySeq)
+        # elif pmtype.upper() == 'QPSK':
+        #   plots = QPSK(Tb, fc, inputBinarySeq)
+
+    if(pmtype != "PCM"):
+        return render_template('PM_graphs.html',pmtype=pmtype.upper(),title=title[pmtype], plots=plots)
+    else:
+        return render_template('PM_graphs.html',pmtype=pmtype.upper(),title=title[pmtype], plots=plots, encoded=encoded)
+ 
 
 
 

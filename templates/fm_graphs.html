@@ -60,28 +60,30 @@
           <select name="message_signal" class="input-bar">
             <option value="sin">Sin</option>
             <option value="cos" selected>Cos</option>
+            <option value="tri">Tri</option>
           </select>
       </div>  
       <div class="input-wrapper">
           <label for="freqc">Carrier frequency</label>
-          <input required type="number" id="freqc" name="fc" class="input-bar" placeholder="frequencyc value..">
+          <input required type="number" id="freqc" min="10000" name="fc" class="input-bar" placeholder="frequencyc value..">
       </div>
       <div class="input-wrapper">
         <label for="freqm">Message Frequency</label>
-          <input required type="number" id="freqm" name="fm" placeholder="frequencym value..">
+          <input required type="number" id="freqm" min="1000" name="fm" placeholder="frequencym value..">
       </div>
       <div class="input-wrapper">
           <label for="am">Message Amplitutde</label>
-          <input required type="number" id="am" name="Am" placeholder="Am value..">
+          <input required type="number" id="am" name="Am" min="3" placeholder="Am value..">
       </div>
-      <div class="input-wrapper" style="display: none;">
+      <div class="input-wrapper">
         <label for="K">K</label>
-        <input required type="number" id="K" value="1" name="K" placeholder="Am value..">
+        <input required type="number" id="K" min="1" name="K" placeholder="K value..">
     </div>
       <div class="input-wrapper">
           <label for="am">Carrier Amplitude</label>
-          <input required type="number" id="am" name="Ac" placeholder="Ac value..">
+          <input required type="number" id="am" min="4" name="Ac" placeholder="Ac value..">
       </div>
+      
     </div>
     <div class="buttons">
       <button type="submit" id="submit-button">show results</button>
@@ -99,7 +101,7 @@
           {%if key=="Am" or key=="Ac"%}
             Volts
           {%elif key=="fm" or key=="fc" %}
-            KHz
+            Hz
           {%endif%}
         </span>
       </article>

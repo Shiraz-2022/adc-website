@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<!-- <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
-  <style>
+  <!-- <style>
     .inputs{
       display: flex;
       gap: .5rem;
@@ -35,9 +35,13 @@
         setTimeout("location.reload(true);", 5);
      }
 </script>
-</head>
-<body>
-  <nav>
+</head> -->
+{% include 'head.html' %}
+<body class="graph-body">
+  {% with title= title %}
+    {% include 'nav.html' %}
+  {%endwith%}
+  <!-- <nav>
     <h1 class="heading">{{title}}</h1>
     <div class="buttons-nav">
       <button class="back-button" style="right: calc(5vw + 45px);">
@@ -51,8 +55,8 @@
         </a>
       </button>  
     </div>
-  </nav>
-<div class="container-full">
+  </nav> -->
+<div class="container-full" id="graph-back">
 
   <form action="/DM3/{{dmtype}}" method="POST">
     <div class="inputs"> 

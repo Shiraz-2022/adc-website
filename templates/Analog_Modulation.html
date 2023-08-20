@@ -4,9 +4,10 @@
 <body>
     {% import "macros.html" as macros %}
     <div class="wraper">
-        {% with title="Amplitude Modulation",back_link="AM" %}
+        {% with back_link="AM" %}
             {% include "nav.html" %}
         {% endwith %}
+        <div class="after-nav"></div>
         <div class="container">
             <div class="content" id="Amplitude-modulation-section">
                 {% for i in data %}

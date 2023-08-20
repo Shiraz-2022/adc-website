@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include "head.html" %}
-{% import "macros.html" as macros%}
 <body>
-
+    {% import "macros.html" as macros %}
     <div class="wraper">
-        {% with title="Pulse Modulation", bgcolor="#348191" %}
+        {% with title="Pulse Modulation", back_link="PM" %}
             {% include "nav.html" %}
         {% endwith %}
+        <div class="after-nav"></div>
         <div class="container">
             <div class="content" id="Amplitude-modulation-section">
                 {% for i in data %}
@@ -16,7 +16,6 @@
             </div>
         </div>
     </div>
-
 </body>
 </html>
 
