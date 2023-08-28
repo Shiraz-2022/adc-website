@@ -35,8 +35,9 @@
             define the transmitted signal as</p>
 
         <img src="/static/images/QPSK/first.png" alt="">
-        <p>where i=1,2,3,4, E is the transmitted signal energy per symbol and T is the symbol duration.</p>
+        <p>where i=1,2,3,4, <b>E</b> is the transmitted signal energy per symbol and <b>T</b> is the symbol duration.</p>
         <p>Each one of the four equally spaced phase values corresponds to a unique pair of bits called a dibit.</p>
+        <img src="/static/images/QPSK/qpskdibits.png" alt="">
         <p>For example, Gray encoded set of dibits: 10, 00, 01, and 11. In this form of encoding, we see that only a
             single bit is changed from one
             dibit to the next.</p>
@@ -80,9 +81,9 @@
 
 
 
-            <h3>GENERATION AND COHERENT DETECTION OF QPSK SIGNALS</h3>
+            <h3 align="center">GENERATION AND COHERENT DETECTION OF QPSK SIGNALS</h3>
         <img class="b1" src="/static/images/QPSK/block_1.png" alt="" width="600px">
-        <h4>Generation</h4>
+        <h3>Generation</h3>
          <p>To generate the QPSK signal, the incoming binary data stream is first converted into polar
             form by a non-return-to-zero level encoder; the encoder output is denoted by b(t).<br>
 
@@ -98,8 +99,8 @@
 
 
 
-        <p> <img class="b2" src="/static/images/QPSK/block_2.png" alt="" width="600px">
-        <h4 class="side_heading_2">Detection:</h4>
+        <h3 class="side_heading_2">Detection:</h3>
+        <img src="/static/images/QPSK/block_2.png" alt="">
         <p>The design of the QPSK receiver builds on the
             strategy described for the coherent BPSK receiver. <br>
             • The QPSK receiver consists of an in-phase (I)-channel
@@ -124,7 +125,9 @@
             operation Of the receiver.</p>
         </p>
 
-
+        <h3>Power Spectra of QPSK</h3>
+        <img src="/static/images/QPSK/qpskps.png">
+        <p>Comparing the power spectral plots of Fig. 7.9 for QPSK with those of Fig. 7.6 for BPSK, we observe that QPSK occupies a bandwidth equal to one half that of BPSK.</p>
 
     </section>
 

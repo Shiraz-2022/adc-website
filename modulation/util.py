@@ -7,7 +7,7 @@ def triangular(f,A,x):
     return A * np.abs((2 * x * f) % 2 - 1)
     
 
-def plot_graph(x,y,title,xlabel="Volts",ylabel="Frequncy",color="b",condition="line",text=""): # changed to line from scattter
+def plot_graph(x,y,title,xlabel="Frequency",ylabel="Volts",color="b",condition="line",text=""): # changed to line from scattter
     x_smooth = np.linspace(x.min(), x.max(), 1000)
     y_smooth = np.interp(x_smooth, x, y) # interpolates the points
 
@@ -17,8 +17,9 @@ def plot_graph(x,y,title,xlabel="Volts",ylabel="Frequncy",color="b",condition="l
     plot_axis(fig,ax) # calls plot_axis function
     s = [3 for i in x] # for each point in signal give the marker point size 3
     plt.title(title) # set plot tiltle
-    plt.xlabel(xlabel) # set plot xlabel
-    plt.ylabel(ylabel) # set plot ylabel
+    plt.xlabel(xlabel,loc="left") # set plot xlabel
+    plt.ylabel(ylabel,loc="top") # set plot ylabel
+
 
     if text!="":
         plt.text(-210, 5, text, fontsize=14, ha='center', va='center',rotation=90)
@@ -46,7 +47,7 @@ def plot_axis(fig,ax):
     ax.yaxis.set_ticks_position('left')
 
 def create_domain_AM():
-    x= np.linspace(-500,500,1000000) # creates an array of points between -200 and 200 with 10000 points in between
+    x= np.linspace(-1000,1000,1000000) # creates an array of points between -200 and 200 with 10000 points in between
     # if frequency>=50 and frequency<=2000:
     #     x = np.linspace(-500,500,1000000) 
     # elif frequency<50:

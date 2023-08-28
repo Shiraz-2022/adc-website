@@ -3,7 +3,7 @@
         {
             "title":"Analog Modulation",
             "descritption":"The early and simple form of modulation for radio communication. Explore AM modulator, demodulator, transmission examples, modulation trapeze ...",
-            "image_link":"https://upload.wikimedia.org/wikipedia/commons/9/97/Amplitudemodulation.gif?20150401022946",
+            "image_link":"https://i.pinimg.com/originals/8e/74/b4/8e74b48d8aa8cf779f37fc97b5e7bc83.jpg",
             "color":"white",
             "hasTheory":"false",
             "demoLink":"-",
@@ -13,7 +13,7 @@
         {
             "title":"Digital Modulation",
             "descritption":"Digital modulation is the process of encoding a digital information signal into the amplitude, phase, or frequency of the transmitted signal.",
-            "image_link":"https://reviseomatic.org/help/2-modulation/Digimod-PAM.gif",
+            "image_link":"https://images.pond5.com/blue-code-wave-background-business-footage-192021572_iconl.jpeg",
             "color":"white",
             "hasTheory":"false",
             "demoLink":"-",
@@ -46,7 +46,7 @@
         {
             "title":"SSB Modulation",
             "descritption":"Amplitude modulation made radio broadcasting possible.Single sideband modulation made it possible to improve it, by saving bandwidth. Analyze a SSB-signal in time and frequency domain and change parameters... ",
-            "image_link":"http://3.bp.blogspot.com/-wRxe6tbz-7k/UAvJ_prUTiI/AAAAAAAAARA/SuhXKxshaU4/s400/aa-ssb.gif",
+            "image_link":"https://electronicspost.com/wp-content/uploads/2015/12/spectrum-of-message-signal-and-product-modulator-output.png",
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/AM/SSB",
@@ -68,7 +68,7 @@
         {
             "title":"QAM Modulation",
             "descritption":"QAM (quadrature amplitude modulation) is a method of combining two amplitude modulation (AM) signals into a single channel. This approach helps double its effective bandwidth.",
-            "image_link":"https://www.zhinst.com/sites/default/files/blogs/migrate/Constellation_QAM64.gif",
+            "image_link":"https://i.stack.imgur.com/CFQ9b.jpg",
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/AM/QAM",
@@ -78,7 +78,7 @@
         {
             "title":"Frequency Modulation",
             "descritption":"Frequency modulation signal spectra show sidebands for sinewave modulation. In this experiment we take a look how they change with the modulating signal amplitude.",
-            "image_link":"https://upload.wikimedia.org/wikipedia/commons/9/94/Amfm2.gif",
+            "image_link":"https://www.allaboutcircuits.com/uploads/articles/RFT_ch4_pg3_FMm4.jpg",
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/FM/1",
@@ -88,7 +88,7 @@
         {
             "title":"Phase Modulation",
             "descritption":"Phase modulation (PM) is a modulation pattern for conditioning communication signals for transmission. It encodes a message signal as variations in the instantaneous phase of a carrier wave.",
-            "image_link":"https://pages.vassar.edu/magnes/files/2012/04/phase4.gif",
+            "image_link":"https://www.allaboutcircuits.com/uploads/articles/RFT_ch4_pg4_PMm4.jpg",
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/FM/2",
@@ -187,15 +187,7 @@
             "demoLink":"/PM/PAM",
             "theoryLink":"-"
         },
-        {
-            "title":"PPM(Pulse Position Modulation)",
-            "descritption":"The early and simple form of modulation for radio communication. Explore AM modulator, demodulator, transmission examples, modulation trapeze ...",
-            "image_link":"https://upload.wikimedia.org/wikipedia/commons/9/97/Amplitudemodulation.gif?20150401022946",
-            "color":"white",
-            "hasTheory":"true",
-            "demoLink":"/PM/PPM",
-            "theoryLink":"-"
-        },
+
         {
             "title":"PWM(Pulse Width Modulation)",
             "descritption":"The early and simple form of modulation for radio communication. Explore AM modulator, demodulator, transmission examples, modulation trapeze ...",

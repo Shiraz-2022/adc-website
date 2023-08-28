@@ -1,60 +1,104 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from .util import *
+from scipy import signal
 
 def round_to_nearest_multiple(number):
         length = len(str(number))
         base = 10 ** (length - 1)
         return base * round(number / base)
 
+# def PPM(inputs):
+#     [fm,Am,message_type,ql,ppm_ratio,nb] = inputs
+
+#     fm = round_to_nearest_multiple(fm)
+
+#     duration = 1
+#     sampling_rate = 1000
+#     x = np.linspace(-500, 500, 1000)
+
+#     if message_type == "sin":
+#         message = Am*np.sin(2 * np.pi * fm * x)
+#     elif message_type == "cos":
+#         message = Am*np.cos(2 * np.pi * fm * x)
+
+#     # Range of the amplitude values
+#     num_quantization_levels = ql  # Number of quantization levels
+#     amplitude_range = (-Am, Am)
+
+#     # Generate a continuous message signal
+#     t = np.linspace(0, 1, sampling_rate)
+#     message_signal = np.sin(2 * np.pi * fm * x)  # Example message signal
+
+#     # Calculate the step size between quantization levels
+#     step_size = (amplitude_range[1] - amplitude_range[0]) / (num_quantization_levels - 1)
+
+
+#     # Quantize the analog signal
+#     quantized_signal = np.round((message - amplitude_range[0]) / step_size) * step_size + amplitude_range[0]
+#     quantized_value = ''
+
+#     symbol_duration = 1 / ppm_ratio
+#     t_ppm = np.linspace(0, duration, int(sampling_rate * duration))
+#     ppm_encoded_signal = np.zeros_like(t_ppm)
+
+#     symbol_index = 0
+#     for symbol in quantized_signal:
+#         num_samples = int(ppm_ratio * sampling_rate)
+#         ppm_encoded_signal[symbol_index:symbol_index + num_samples] = symbol
+#         symbol_index += num_samples
+
+    
+#     a = plot_graph(x, message,color="red", title="message_signal")
+#     b = plot_graph(x, quantized_signal,color="green", title="Quantized wave")
+#     c = plot_graph(t_ppm, ppm_encoded_signal, color="blue", title="PPM Encoded Signal")
+    
+#     return [a,b,c]
+
 def PPM(inputs):
-    [fm,Am,message_type,ql,ppm_ratio,nb] = inputs
-
+    [fm, Am, message_type, fs,ppm_ratio] = inputs
     fm = round_to_nearest_multiple(fm)
+    x = np.linspace(-500, 500, 1000000)
 
+    sampling_rate = 1000000
     duration = 1
-    sampling_rate = 1000
-    x = np.linspace(-500, 500, 1000)
+    duty_cycle_range = (20, 80)
+    position_range = (0.1, 0.9)
 
     if message_type == "sin":
-        message = Am*np.sin(2 * np.pi * fm * x)
+        message = Am * np.sin(2 * np.pi * fm * x)
     elif message_type == "cos":
-        message = Am*np.cos(2 * np.pi * fm * x)
-
-    # Range of the amplitude values
-    num_quantization_levels = ql  # Number of quantization levels
-    amplitude_range = (-Am, Am)
-
-    # Generate a continuous message signal
-    t = np.linspace(0, 1, sampling_rate)
-    message_signal = np.sin(2 * np.pi * fm * x)  # Example message signal
-
-    # Calculate the step size between quantization levels
-    step_size = (amplitude_range[1] - amplitude_range[0]) / (num_quantization_levels - 1)
+        message = Am * np.cos(2 * np.pi * fm * x)
+    elif message_type == 'tri':
+        message = triangular(fm, Am, x)
 
 
-    # Quantize the analog signal
-    quantized_signal = np.round((message - amplitude_range[0]) / step_size) * step_size + amplitude_range[0]
-    quantized_value = ''
+    # t = np.linspace(0, duration, int(sampling_rate * duration))
+    # normalized_message = (message - message.min()) / (message.max() - message.min())
+    # duty_cycle = np.interp(normalized_message, (0, 1), duty_cycle_range) / 100.0
+    # pwm_signal = np.where(np.mod(t, 1/fs) < duty_cycle / fs, 1, 0)
 
-    symbol_duration = 1 / ppm_ratio
-    t_ppm = np.linspace(0, duration, int(sampling_rate * duration))
-    ppm_encoded_signal = np.zeros_like(t_ppm)
 
-    symbol_index = 0
-    for symbol in quantized_signal:
-        num_samples = int(ppm_ratio * sampling_rate)
-        ppm_encoded_signal[symbol_index:symbol_index + num_samples] = symbol
-        symbol_index += num_samples
 
+    # ppm_signal = np.zeros_like(pwm_signal)
+    # pulse_width = 1 / fs
+    # ppm_start = 0
+    # for i, pulse in enumerate(pwm_signal):
+    #     if pulse == 1:
+    #         ppm_signal[int(ppm_start * fs):int((ppm_start + pulse_width) * fs)] = 1
+    #         ppm_start += pulse_width
     
-    a = plot_graph(x, message,color="red", title="message_signal")
-    b = plot_graph(x, quantized_signal,color="green", title="Quantized wave")
-    c = plot_graph(t_ppm, ppm_encoded_signal, color="blue", title="PPM Encoded Signal")
+
+    # modulated_wave = message * ppm_signal
+
+    pulse = 1+signal.square(2 * np.pi * fs * x)
     
-    return [a,b,c]
 
+    a = plot_graph(x, message, title="Message", condition="plot", color="red")
+    b = plot_graph(t, ppm_signal, title="PPM Signal", condition="plot", color="green")
+    c = plot_graph(x, pwm_signal, title="Modulated wave", condition="plot", color="blue")
 
+    return [a, b,c]
     
 
 def PCM(inputs):
@@ -277,18 +321,31 @@ def SAMPLING(inputs):
     #[Am,Ac,fm,fc,message_type,fs] = inputs
     [fm,Am,message_type,fs] = inputs
     #N  = 1000
-    x = np.linspace(-500, 500, 1000000)
+  
     fm = round_to_nearest_multiple(fm)
-    #x = np.linspace(0,1,fs)
+        #x = np.linspace(0,1,fs)
 
     #pulse_width = 0.01  # Pulse width in seconds
     #pulse_period = 0.1  # Pulse period in seconds
     #duration = 1.0  # Duration of the signal in seconds
+    x = np.linspace(-500, 500, 1000000)
     sampling_rate = 1000000  # Sampling rate in Hz
+
+    if(fs <= 500 and fm <= 10000):
+        x = np.linspace(-1000, 1000, 1000000)
+        sampling_rate = 1000000  # Sampling rate in Hz
+    
+    else:
+        x = np.linspace(-100000, 100000, 1000000)
+        sampling_rate = 1000000  # Sampling rate in Hz
+    
+
+
     modulation_index = 0.8
 
     # t = np.linspace(-500, 500, 1000000)
-    pulse = 0.5 * (1 + np.sign(np.sin(2 * np.pi * fs * x)))
+    # pulse = 1 + np.sign(np.sin(2 * np.pi * fs * x))
+    pulse = 1+signal.square(2 * np.pi * fs * x)
 
    
 

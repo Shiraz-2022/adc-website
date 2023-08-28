@@ -45,9 +45,11 @@
                         </p>
                     </span>
                 </span>
-                <p>T<sub><sub>b</sub></sub> denoting the bit duration and E<sub><sub>b</sub></sub> denoting the transmitted signal energyper bit. </p>
+                <p>T<sub><sub>b</sub></sub> denoting the bit duration and E<sub><sub>b</sub></sub> denoting the transmitted signal energy per bit. </p>
             
             </span>
+
+            <img src="/static/images/BPSK/bpsk.png">
 
             <span>
                 <p>
@@ -60,13 +62,13 @@
                     special case of double-sideband suppressed-carried (DSB-SC) modulation.
                 </p>
             </span>
-    
-            <h3>GENERATION AND COHERENT DETECTION OF BPSK SIGNALS</h3>
+            <br><br>
+            <h2 align="center">GENERATION AND COHERENT DETECTION OF BPSK SIGNALS</h2>
        
             <img src="/static/images/BPSK/6.png" alt="">
        
         <span>
-            <h4>Generation</h4>
+            <h3>Generation</h3>
             <p>
                 BPSK signal is a special case of DSB-
                 SC modulation. Specifically, we use a product
@@ -89,7 +91,7 @@
         </span>
          
     
-            <h4>Detection</h4>
+            <h3>Detection</h3>
             <ol>
                 <li>To detect the original binary sequence of 1s and 0s,
                     the BPSK signal at the channel output is applied
@@ -113,10 +115,7 @@
                 </li>
                 <li>
                     Decision-making device, which compares the sampled value of the low-pass filter's output to an
-                    externally supplied
-                </li>
-                <li>
-                    threshold. If the threshold is exceeded, the device decides in favor of symbol 1; otherwise, it decides in
+                    externally supplied threshold. If the threshold is exceeded, the device decides in favor of symbol 1; otherwise, it decides in
                     favor of symbol 0. 
                 </li>
             </ol>
@@ -128,7 +127,7 @@
                     applied to the product modulator in the demodulator is synchronous in phase (and, of course, frequency) with the
                     carrier wave used in the modulator.This requirement can be achieved by using a phase-locked loop.</p>
 
-                <img src="/static/images/BPSK/bpsk signal.jpg" ali=""  width="280px">
+                <img src="/static/images/BPSK/bpsk signal.jpg" alt=""  width="280px">
     
 
       <h3>Graph of BPSK</h3>
@@ -141,9 +140,18 @@
         <h4>Phase-shift keying:</h4>
         <p>Phase-shift keying (PSK) is a digital modulation technique that uses the phase of the carrier wave to transmit digital data. In PSK, the phase of the carrier wave is varied to represent the binary data stream. For example, a binary 0 could be represented by a carrier wave with a phase of 0 degrees, while a binary 1 could be represented by a carrier wave with a phase of 180 degrees.</p>
         <p>To transmit a binary data stream using PSK, the binary data stream is first encoded into a series of digital bits, which are then used to modulate the phase of the carrier wave. At the receiver end, the modulated carrier wave is demodulated to recover the original binary data stream. PSK is a more efficient modulation technique compared to ASK since it requires less bandwidth to transmit the same amount of data. However, it is more complex to implement and is also susceptible to noise and interference.</p>
-
+        <h3>Spectral Analysis of BPSK</h3>
+        <img src="/static/images/BPSK/BPSKPowerSpec.png">
+            <ol>
+                <li>BASK and BPSK signals occupy the same transmission bandwidth namely, 2/Tb which defines the width of the main lobe of the sinc-shaped power spectra.</li>
+                <li>The BASK spectrum includes a carrier component, whereas this component is absent from the BPSK spectrum. With this observation we are merely restating the fact that BASK is an example of amplitude modulation, whereas BPSK is an example of DSB-SC.</li>
+                <li>The presence of carrier in the BASK spectrum means that  binary data stream can be recovered by envelope detection of BASK signal.</li>
+                <li>Suppression of the carrier in  BPSK spectrum mandates use of coherent detection for recovery of binary data stream from the BPSK signal.</li>
+            </ol>
     </section>
+
     <script src="../../static/main.js"></script>
+    
 </body>
 
 </html>

@@ -3,9 +3,18 @@ import numpy as np
 from scipy import signal  
 from .util import *
 
+
+def round_to_nearest_multiple(number):
+        length = len(str(number))
+        base = 10 ** (length - 1)
+        return base * round(number / base)
+
 def FM_MAIN(inputs):
 
     Am,Ac,fm,fc,message_signal,k = inputs.values()
+
+    fm = round_to_nearest_multiple(fm)
+    fc = round_to_nearest_multiple(fc)
 
     x_carrier = create_domain_AM()
     x_message = create_domain_AM()
@@ -37,6 +46,9 @@ def FM_MAIN(inputs):
 def PHASE_MAIN(inputs):
     Am,Ac,fm,fc,message_signal,k = inputs.values()
 
+    fm = round_to_nearest_multiple(fm)
+    fc = round_to_nearest_multiple(fc)
+
     x_carrier = create_domain_AM()
     x_message = create_domain_AM()
     
@@ -48,13 +60,28 @@ def PHASE_MAIN(inputs):
         message = Am*np.cos(2*np.pi*fm*x_message )
     elif(message_signal=="tri"):    
         message = triangular(fm, Am, x_message)    
-    
-    carrier = Ac*np.cos(2*np.pi*fc*x_carrier)
-    modulated_wave = Ac * np.cos(2 * np.pi * fc * x_message + k * message)
+
+    sampling_rate = 1000000  # Sampling rate (samples per second)
+    t = np.linspace(0, 1, int(sampling_rate), endpoint=False)
+
+
+    message_int = message.astype(int)
+    # for val in message:
+    #     if message[val] >= 0:
+    #         phase = k * np.sin(2 * np.pi * 5 * x_message)
+    #     else:
+    #         phase = -k * np.sin(2 * np.pi * 5 * x_message)
+
+    # pm_modulated_signal = np.sin(2 * np.pi * fc * x_message + phase) 
+
+    # k = k*10
+    carrier = Ac*np.cos(2*np.pi*fc*t)
+    modulated_wave = Ac * np.cos(2 * np.pi * fc * t + k *  message)
     #demodulated_wave = np.gradient(np.unwrap(np.angle(modulated_wave))) / (2 * np.pi * k)
         
     a = plot_graph(x = x_message, y = message, title = "Message Signal",color="red")
-    b = plot_graph(x = x_message, y = modulated_wave, title = "Modulated wave",color="blue")
-    c = plot_graph(x = x_message, y = carrier, title = "Carrier Signal",color="green")  
+    b = plot_graph(x = x_carrier, y = carrier, title = "Carrier Signal",color="green") 
+    c = plot_graph(x = x_message, y = modulated_wave, title = "Modulated wave",color="blue") 
     #d = plot_graph(x = x_message, y = demodulated_wave, title = "demodulated wave",color="green")      
     return [a,b,c]
+

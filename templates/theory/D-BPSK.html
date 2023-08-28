@@ -25,21 +25,56 @@
         </div>
     </nav>
     <section class="theory-body">
-
-        <p>The differential demodulation of DEBPSK signal is denoted as differential-BPSK or DBPSK, sometimes simply
+        <p>Both ASK and FSK offer themselves naturally to noncoherent detection whenever it is impractical to maintain carrier-phase synchronization of the receiver to the transmitter. But in the case of PSK, we cannot have noncoherent detection in the traditional sense because the term “noncoherent” means having to do without carrier-phase information.
+            To get around this difficulty, we employ a “pseudo PSK” technique known as differential phase-shift keying (DPSK), which, does permit the use of noncoherent detection.</p>
+        <p>DPSK eliminates the need for a coherent reference signal at the receiver by combining two basic operations at the transmitter:</p>
+        <ol><li>Differential encoding of the input binary wave.</li>
+            <li>Phase-shift keying.</li>
+        </ol>
+        <p>Because of this combination it is known as "differential phase-shift keying.”  
+        The differential demodulation of DEBPSK signal is denoted as differential-BPSK or DBPSK, sometimes simply
             called as DPSK.</p>
-
+        <p><b>Differential encoding, in which the information is encoded in terms of signal transitions. 
+            Transition is used to designate symbol 0, whereas no transition is used to designate symbol 1.
+            The original binary information is recovered by comparing the polarity of adjacent symbols to establish whether or not a transition has occurred.</b></p>
+        <img src="/static/images/D-BPSK/dbpsk1.png">
         <img src="/static/images/D-BPSK/13.png" alt="" width="270px">
 
 
 
         <p>Coherent detection requires a reference signal with accurate frequency and phase information. However, in
-            non-coherent communications, a coherent reference signal is not available at the receiver. Figure 2.7
-            illustrates a sub-optimum receiver, which differentially demodulates the DBPSK signal, where the previous
-            symbol serves as a reference to demodulate the current symbol.
-        </p>
+            non-coherent communications, a coherent reference signal is not available at the receiver.</p>
+        <h3>Generation and Detection</h3>
+            <p>To send symbol 0, we phase advance current signal waveform by 180 degrees, and to send symbol 1 we leave phase of the current signal waveform unchanged.
+                <br>
+                So, receiver is equipped with a storage capability (i.e., memory) designed to measure the relative phase difference between the waveforms received during two successive bit intervals. 
+               <br>The differential encoding process at the transmitter input starts with an arbitrary first bit, serving merely as reference. Let {dk} denote the differentially encoded sequence with this added reference bit. The transmitter performs the following two operations:</p>
+            <ol><li>If the incoming binary symbol bk is 1, then the symbol dk is unchanged with respect to the previous symbol dk-1.</li>
+                <li>If the incoming binary symbol bk is 0, then the symbol is changed with respect to the previous symbol dk-1.</li>
+                <li>Differentially encoded sequence {dk} is used to phase-shift a sinusoidal carrier wave with phase angles 0 and π radians, representing symbols 1 and0, respectively.</li>
+            </ol>
+            <img src="/static/images/D-BPSK/Dpskbitgen.png">
+            
+            <h3>DPSK Transmitter</h3>
+            <img src="/static/images/D-BPSK/DPSKTransmitterCkt.png"><ol>
+                <li>DPSK transmitter consists a logic network and a one-bit delay element (acting as the memory unit) interconnected so as to convert the raw binary sequence {bk} into a differentially encoded sequence {dk}.</li>
+                <li>This sequence is amplitude-level encoded and then used to modulate a carrier wave of frequency fc thereby producing the desired DPSK signal.</li>
+            </ol>
 
-        <img src="/static/images/D-BPSK/14.png" alt="">
+            <h3>DPSK Detection</h3>
+            <img src="/static/images/D-BPSK/DPSKdetection.png">
+            <p>For the detection of DPSK signals, we take advantage of the fact that the phase-modulated pulses pertaining to two successive bits are identical except for a possible sign reversal. 
+                <p>Incoming pulse is multiplied by  preceding pulse, which means that  preceding pulse serves  purpose of a locally generated reference signal.</p>
+                <p>DPSK signal is detectable, given knowledge of reference bit, which, as mentioned previously, is inserted at   beginning of incoming binary data stream.</p>
+                <p>In particular, applying  sampled output of the low-pass filter to a decision-making device supplied with a prescribed threshold, detection of DPSK signal is accomplished. If the threshold is exceeded, the receiver decides in favor of symbol 1; otherwise, the decision is made in favor of symbol 0.</p>
+                <p><b>Comparing  DPSK detector and  coherent BPSK detector, the two receiver structures are similar except for  source of locally generated reference signal.</b></p>
+                
+                <br><br>
+                <h3>DBPSK Modulation and Demodulation</h3>
+            <img src="/static/images/D-BPSK/14.png" alt="">
+            <p>Fig. 2.7 illustrates a sub-optimum receiver, which differentially demodulates the DBPSK signal, where the previous
+            symbol serves as a reference to demodulate the current symbol.</p>
+
 
 
 

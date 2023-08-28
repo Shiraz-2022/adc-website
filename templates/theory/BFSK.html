@@ -36,9 +36,6 @@
                     </p>            
                 </span>
             </div>
-    
-                <img class="graph" src="/static/images/BFSK/2.png" alt=""> 
-        
         </div>
   
 
@@ -53,10 +50,9 @@
                     <span>}</span>
                 </span>
             </span>
-            <p>Then, multiplying b(t) by the sinusoidal carrier wave of above Equation with phase <i> &phi;<sub>c</sub></i>  set equal to zero for convenience of presentation, we get the BASK wave</p>    
+            <p>Then, multiplying b(t) by the sinusoidal carrier wave of above Equation with phase <i> &phi;<sub>c</sub></i>  set equal to zero for convenience of presentation, we get the BASK wave where Eb is the transmitted signal energy per bit.</p>
         </span>
         <span>
-            <p> Where Eb is the transmitted signal energy per bit.</p>
             <p>When the frequencies f<sub>1</sub>and f<sub>2</sub> are chosen in such a way that
                 they differ from each other by an amount equal to the
                 reciprocal of the bit duration the BFSK signal is referred to as
@@ -73,6 +69,9 @@
             <p>a. Binary data stream</p>
             <p>b. Frequency-shift keying.</p>
         </article>
+        <br>
+        <img class="graph" src="/static/images/BFSK/2.png" alt=""> 
+        
         <span>
             <h4>Binary data stream:</h4>
             <p>A binary data stream is a sequence of bits that represent digital information, such as text, images, audio, or video. Each bit is a binary digit that can have one of two possible values: 0 or 1. The bits are transmitted or stored in a sequential order, with each bit representing a unit of information.</p>
@@ -85,6 +84,16 @@
             <h4>Amplitude-shift keying (ASK):</h4>
             <p>Amplitude-shift keying is a digital modulation technique that uses the amplitude of a carrier wave to represent the binary data. In ASK, the amplitude of the carrier wave is switched between two different levels to represent 0 and 1 in the binary data stream. For example, if the carrier wave has an amplitude of A and A/2, it can represent 0 and 1, respectively. The receiver detects the amplitude changes in the carrier wave and decodes them back into the original binary data. ASK is a simple and efficient modulation technique but is sensitive to noise and distortion in the communication channel.</p>
         </span>
+        
+        <h3>Non-Coherent Detection of BFSK Signal</h3>
+        <img class="graph" src="/static/images/BFSK/1.png">
+        <ol>
+            <li>In BFSK, transmissions of symbols 1 and 0 are represented by two carrier waves of frequencies f1 and f2, respectively.</li>
+            <li>The receiver consists of two paths, one dealing with frequency f1 (i.e., symbol 1) and the other dealing with frequency f2 (i.e., symbol 0)</li>
+            <li>Path 1 uses a band-pass filter of mid-band frequency f1. The filtered version of the incoming BFSK signal is envelope-detected and then sampled at time t=iTb to produce the output v1.</li>
+            <li>Path 2 uses a band-pass filter of mid-band frequency f2. As with path 2, filtered version of the BFSK signal is envelope detected and then sampled at time t=iTb to produce a different output v2.</li>
+            <li>The outputs of the two paths, v1 and v2 are applied to a comparator, where decisions on the composition of the BFSK signal are repeated every seconds.</li>
+        </ol>
     </section>
 
 

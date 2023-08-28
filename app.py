@@ -80,7 +80,6 @@ def Amplitutde_Modulation(am_type):
         elif am_type == "SSB":
             plots = AM_ssb_modulation(inputs)     # plots differnet graphs according to the input
         elif am_type == "DSBSC":
-            inputs["phi"] = 1
             plots = AM_double_sideband_modulation(inputs)
         elif am_type == "QAM":
             message_signal_2 = request.form['message_signal_2']
@@ -102,9 +101,10 @@ def FM(index):
         Am=int (request.form['Am'])
         Ac=int (request.form['Ac'])
         message_signal = str(request.form['message_signal']) # gets message signal value
-        K = int(request.form['K'])
+        K = float(request.form['K'])
         if(fc<fm or Ac<Am):
             errMsg = "Given graph is Not possible as Fc <Fm or Ac<Am." 
+
         inputs = {"Am":Am,"Ac":Ac,"fm":fm,"fc":fc,"message_signal":message_signal,"K":K}
         # = np.linspace(-200,200,10000)  #domain for the modulated_wave
         #s = [1 for i in x] # looks like its an impulse
@@ -231,10 +231,11 @@ def PulseModulation(pmtype):
       # Change Binary string to array
         print(pmtype)
         if pmtype.upper() == 'PPM':
-            inputs.append(int(request.form['ql']))
+            # inputs.append(int(request.form['ql']))
+            inputs.append(int(request.form['fs']))
             ppm_ratio = float(request.form['ppm_ratio'])        
             inputs.append(ppm_ratio)
-            inputs.append(int(request.form['nb']))
+            # inputs.append(int(request.form['nb']))
             plots = PPM(inputs)
         elif pmtype.upper() == 'PAM':
           inputs.append(int(request.form['fs']))
