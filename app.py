@@ -272,18 +272,9 @@ def PulseModulation(pmtype):
 
 def create_app():
     # PORT = int(os.environ.get("PORT",8000))
-    app.run(debug=True)
-
-# if __name__ == "__main__":
-#     create_app()
-
-if __name__ == "__main__":
-    app = create_app()
     port = int(os.environ.get("PORT", 5000))  # Use 5000 as default
     app.run(debug=True, host='0.0.0.0', port=port)
+    # app.run(debug=False,host='0.0.0.0')
 
-# if __name__ == '__main__':
-#     create_app = create_app()
-#     create_app.run()
-# else:
-#     gunicorn_app = create_app()
+if __name__ == "__main__":
+    create_app()
