@@ -56,6 +56,18 @@ def round_to_nearest_multiple(number):
 #     return [a,b,c]
 
 def PPM(inputs):
+
+    def generate_ppm(input_signal, ppm_ratio, pulse_frequency, time_duration):
+        t = np.linspace(0, time_duration, len(input_signal), endpoint=False)
+    
+        normalized_signal = (input_signal - np.min(input_signal)) / (np.max(input_signal) - np.min(input_signal))
+        pulse_positions = np.floor(ppm_ratio * normalized_signal * len(t)).astype(int)
+    
+        ppm_waveform = np.zeros(len(t))
+        ppm_waveform[pulse_positions] = 1
+    
+        return t, ppm_waveform
+
     [fm, Am, message_type, fs,ppm_ratio] = inputs
     fm = round_to_nearest_multiple(fm)
     x = np.linspace(-500, 500, 1000000)
@@ -92,13 +104,17 @@ def PPM(inputs):
     # modulated_wave = message * ppm_signal
 
     pulse = 1+signal.square(2 * np.pi * fs * x)
+    time_duration = len(message) / fs
+
+    t, ppm_waveform = generate_ppm(message, ppm_ratio, fs, time_duration)
+
     
 
     a = plot_graph(x, message, title="Message", condition="plot", color="red")
-    b = plot_graph(t, ppm_signal, title="PPM Signal", condition="plot", color="green")
-    c = plot_graph(x, pwm_signal, title="Modulated wave", condition="plot", color="blue")
+    b = plot_graph(t, ppm_waveform, title="PPM Signal", condition="plot", color="green")
+    # c = plot_graph(x, pwm_signal, title="Modulated wave", condition="plot", color="blue")
 
-    return [a, b,c]
+    return [a, b]
     
 
 def PCM(inputs):

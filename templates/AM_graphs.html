@@ -6,6 +6,13 @@
     {% include 'nav.html' %}
   {%endwith%}
 <div class="container-full" id="graph-back">
+  <div class="notes">
+    <h4>Warnings</h4>
+    <ol>
+      <li>Keep the carrier frequency much higher than the message frequency.</li>
+      <li>Keep the carrier amplitude higher than the message amplitude.</li>
+    </ol>
+  </div>
   <form action="/AM/{{am_type}}" method="POST">
     <div class="inputs">
       {% if am_type == "QAM" %}

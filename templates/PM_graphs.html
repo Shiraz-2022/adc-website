@@ -58,6 +58,20 @@
     {%endwith%}
   <div class="container-full" id="graph-back">
 
+    <div class="container-full" id="graph-back">
+      {% if pmtype != "QUANTIZATION" %}
+      <div class="notes">
+        <h4>Warnings</h4>
+        <ol>
+          {% if pmtype == "PCM" %}
+          <li>The number of bits represents the number of bits of the encoded signal that you can see.</li>
+          {% else %}
+          <li>Keep the pulse frequency according to the message frequency. Higher pulse frequency for higher message frequency.</li>
+          {% endif %}
+        </ol>
+      </div>
+      {% endif %}
+
     <form action="/PM/{{pmtype}}" method="POST">
       <div class="inputs">
 

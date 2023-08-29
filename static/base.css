@@ -251,6 +251,8 @@ button:hover{
   }
   .after-hero {
     display: flex; /* Use Flexbox */
+    justify-content: center;
+    align-items: center;
     padding: 50px;
     flex-wrap: wrap; 
     background-color: white;
@@ -263,8 +265,6 @@ button:hover{
 }
 .so{
     padding: 40px;
-    
-    
     font-size: 20px;
     font-family: 'Bebas Neue', sans-serif;
     background-color: #ffc300;
@@ -273,9 +273,30 @@ button:hover{
     color: #1B1931; 
     border: 1.5px solid #050505;
     border-radius: 20px;
-    height: 60vh;
     
 }
+
+
+.notes h4{
+    margin-bottom: 20px;
+}
+
+.notes li{
+    margin-bottom: 5px;
+    list-style: disc;
+}
+
+.notes{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    max-width: calc(95% - 3rem);
+    margin: auto;
+}
+
+
   @media (max-width: 768px) {
    
     .graph-plot{
@@ -429,6 +450,10 @@ button:hover{
       }
       .curved{
         height: 37vh;
+      }
+
+      .notes li{
+        font-size: 14px;
       }
     
 }

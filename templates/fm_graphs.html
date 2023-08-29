@@ -12,35 +12,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- <style>
-    .inputs{
-      display: flex;
-      gap: 1rem;
-      margin: 1rem auto;
-      max-width: 100%;
-      width: 100vw;
-      flex-wrap: wrap;
-      justify-content: space-evenly;
-    }
-    .container-full{
-      padding: 1rem;
-    }
-    nav{
-    background: green;
-    color: white;
-    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 4px );
-    -webkit-backdrop-filter: blur( 4px );
-    position: relative;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-    padding: 1.25rem 1rem;
-    }
-    .buttons{
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-    }
-  </style> -->
 
 </head>
 <body class="graph-body">
@@ -48,6 +19,18 @@
     {% include 'nav.html' %}
   {%endwith%}
 <div class="container-full" id="graph-back">
+  <div class="notes">
+    <h4>Warnings</h4>
+    <ol>
+      <li>Keep the carrier frequency much higher than the message frequency.</li>
+      <li>Keep the carrier amplitude higher than the message amplitude.</li>
+      {% if index == 2 %}
+      <li>For lower carrier frequency keep phase sensitivity higher.</li>
+      {% elif index == 1 %}
+      <li>For lower carrier frequency keep frequency sensitivity higher.</li>
+      {% endif %}
+    </ol>
+  </div>
   <form action="/FM/{{index}}" method="POST">
     <div class="inputs">
       <div class="input-wrapper">
@@ -113,7 +96,7 @@
   {%endif%}
   {%if errMsg%}
      <span style="background-color: brown;width:100%;padding:10px;display: inline-block;text-align: center;color: white;">{{errMsg}}</span>
-  {%endif%}
+  {% else %}
   {% if plots | length == 0%}
   <p class="info">Please select the values to generate the graph</p>
   {% else %} 
@@ -121,6 +104,7 @@
   <img src="data:image/png;base64,{{ plot|decode_hex|b64encode }}" onclick="zoomin()" class="graph-plot" />
   {% endfor %}
   {% endif %}
+  {%endif%}
   
 </div>
 </body>

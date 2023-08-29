@@ -65,19 +65,26 @@ def PHASE_MAIN(inputs):
     t = np.linspace(0, 1, int(sampling_rate), endpoint=False)
 
 
-    message_int = message.astype(int)
-    # for val in message:
-    #     if message[val] >= 0:
-    #         phase = k * np.sin(2 * np.pi * 5 * x_message)
-    #     else:
-    #         phase = -k * np.sin(2 * np.pi * 5 * x_message)
+    # message_int = message.astype(int)
 
-    # pm_modulated_signal = np.sin(2 * np.pi * fc * x_message + phase) 
 
     # k = k*10
     carrier = Ac*np.cos(2*np.pi*fc*t)
-    modulated_wave = Ac * np.cos(2 * np.pi * fc * t + k *  message)
+    # modulated_wave = Ac * np.cos(2 * np.pi * fc * t + k *  message)
     #demodulated_wave = np.gradient(np.unwrap(np.angle(modulated_wave))) / (2 * np.pi * k)
+
+ 
+    # if(fc <= 20000):
+    #     k = k*500
+    # elif(fc > 20000 and fc <=50000):
+    #     k = k*500   
+
+ 
+    # integrated_message = np.cumsum(message) / sampling_rate
+    
+    # Phase modulation formula
+    # modulated_wave = np.cos(2 * np.pi * fc * t + k * integrated_message)
+    modulated_wave = Ac * np.cos(2 * np.pi * fc * t + k *  message)
         
     a = plot_graph(x = x_message, y = message, title = "Message Signal",color="red")
     b = plot_graph(x = x_carrier, y = carrier, title = "Carrier Signal",color="green") 
