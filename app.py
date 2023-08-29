@@ -274,8 +274,13 @@ def create_app():
     # PORT = int(os.environ.get("PORT",8000))
     app.run(debug=True)
 
+# if __name__ == "__main__":
+#     create_app()
+
 if __name__ == "__main__":
-    create_app()
+    app = create_app()
+    port = int(os.environ.get("PORT", 5000))  # Use 5000 as default
+    app.run(debug=True, host='0.0.0.0', port=port)
 
 # if __name__ == '__main__':
 #     create_app = create_app()
