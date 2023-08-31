@@ -167,7 +167,7 @@
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/PM/SAMPLING",
-            "theoryLink":"-"
+            "theoryLink":"/theory/SAMPLING"
         },
         {
             "title":"Quantization",
@@ -176,7 +176,7 @@
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/PM/QUANTIZATION",
-            "theoryLink":"-"
+            "theoryLink":"/theory/QUANTIZATION"
         },
         {
             "title":"PAM(Pulse Amplitude Modulation)",
@@ -185,7 +185,7 @@
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/PM/PAM",
-            "theoryLink":"-"
+            "theoryLink":"/theory/PAM"
         },
 
         {
@@ -195,7 +195,7 @@
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/PM/PWM",
-            "theoryLink":"-"
+            "theoryLink":"/theory/PWM"
         },
         {
             "title":"PCM(Pulse Code Modulation)",
@@ -204,7 +204,7 @@
             "color":"white",
             "hasTheory":"true",
             "demoLink":"/PM/PCM",
-            "theoryLink":"-"
+            "theoryLink":"/theory/PCM"
         }
 
     ]

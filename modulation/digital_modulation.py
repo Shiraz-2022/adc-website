@@ -4,76 +4,71 @@ import numpy as np
 from io import BytesIO
 
 def BASK(Tb, fc, inputBinarySeq):
+    m = inputBinarySeq
+    N = len(m)
 
-  t = np.arange(0, 1+Tb/100, Tb/100)
-  c = np.sqrt(2/Tb)*np.sin(2*np.pi*fc*t)  # Equation for the carrier signal as a function of time
+    t = np.arange(0, N * Tb, 0.01)  # Adjust the time array to cover the entire signal
 
-  # Generate the message signal
-  m = inputBinarySeq
-  N = len(m)
+    c = np.sqrt(2 / Tb) * np.sin(2 * np.pi * fc * t)
 
-  t1 = 0
-  t2 = Tb
+    message = np.zeros((N, len(t)))
 
-  for i in range(N):
-      t = np.arange(t1, t2+0.01, 0.01)  # To obtain each data element, generate a random number m in [0,1]
-      if m[i] > 0.5:  # If m > 0.5 assign value of m=1, else assign m=0
-          m[i] = 1
-          m_s = np.ones(len(t))
-      else:
-          m[i] = 0
-          m_s = np.zeros(len(t))
+    for i in range(N):
+        if m[i] > 0.5:
+            m_s = np.ones(len(t))
+        else:
+            m_s = np.zeros(len(t))
 
-      message = np.zeros((N, len(t)))
-      message[i, :] = m_s
+        message[i, :] = m_s
+
 
       # Product of carrier and message
-      ask_sig = c * m_s  # The modulated signal is the product of the message signal level (dc level) and the carrier signal level (analog level)
+    ask_sig = c * m_s  # The modulated signal is the product of the message signal level (dc level) and the carrier signal level (analog level)
 
-      t1 = t1 + (Tb + 0.01)
-      t2 = t2 + (Tb + 0.01)
+    # t1 = t1 + (Tb + 0.01)
+    # t2 = t2 + (Tb + 0.01)
 
-      # Plotting the message signal
-      plt.subplot(5, 1, 2)
-      plt.axis([0, N, -2, 2])
-      plt.plot(t, message[i, :], 'r')
-      plt.title('message signal')
-      plt.xlabel('t')
-      plt.ylabel('m(t)')
-      plt.grid(True)
+    # Plotting the message signal
+    plt.subplot(5, 1, 2)
+    plt.axis([0, N, -2, 2])
+    plt.plot(t, message[i, :], 'r')
+    plt.title('message signal')
+    plt.xlabel('t')
+    plt.ylabel('m(t)')
+    plt.grid(True)
 
-      # Plotting the BASK signal (modulated signal)
-      plt.subplot(5, 1, 4)
-      plt.axis([0, N, -2, 2])
-      plt.plot(t, ask_sig)
-      plt.title('Amplitude Shift Keying')
-      plt.xlabel('t --->')
-      plt.ylabel('s(t)')
-      plt.grid(True)
+    # Plotting the BASK signal (modulated signal)
+    plt.subplot(5, 1, 4)
+    plt.axis([0, N, -2, 2])
+    plt.plot(t, ask_sig)
+    plt.title('Amplitude Shift Keying')
+    plt.xlabel('t --->')
+    plt.ylabel('s(t)')
+    plt.grid(True)
 
 
   # Save Message & Modulated Signal
-  data = BytesIO()
-  plt.savefig(data,format="png", bbox_inches='tight')
-  data.seek(0)
-  msg_mod = data.getvalue().hex()
-  plt.figure()
+    data = BytesIO()
+    plt.savefig(data,format="png", bbox_inches='tight')
+    data.seek(0)
+    msg_mod = data.getvalue().hex()
+    plt.figure()
 
-  # Plotting the carrier signal
-  plt.subplot(5, 1, 3)
-  plt.plot(t, c)
-  plt.title('carrier signal')
-  plt.xlabel('t')
-  plt.ylabel('c(t)')
-  plt.grid(True)
+    # Plotting the carrier signal
+    plt.subplot(5, 1, 3)
+    plt.plot(t, c)
+    plt.title('carrier signal')
+    plt.xlabel('t')
+    plt.ylabel('c(t)')
+    plt.grid(True)
   # Save
-  data = BytesIO()
-  plt.savefig(data,format="png",bbox_inches='tight' )
-  data.seek(0)
-  carrier = data.getvalue().hex()
-  plt.figure()
+    data = BytesIO()
+    plt.savefig(data,format="png",bbox_inches='tight' )
+    data.seek(0)
+    carrier = data.getvalue().hex()
+    plt.figure()
 
-  return [msg_mod, carrier]
+    return [msg_mod, carrier]
 
 # ------- BFSK - Binary Frequency Shift Keying ----------
 def BFSK(Tb, fc1, fc2 ,inputBinarySeq):

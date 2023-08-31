@@ -53,32 +53,38 @@
 
         <p>The process of deriving Amplitude Modulation (AM) involves multiplying a message signal with a high frequency
             carrier signal to generate a modulated signal.</p>
-        </div>
+       
         <img src="/static/images/AM_MAIN/am_theory_2.png" alt="">
-
+         
         <br><br>
         <h3>Derivation</h3>
         <p>The mathematical expression for AM modulation can be derived as follows:</p>
 
         <p>Let m(t) be the message signal, c(t) be the carrier signal, and s(t) be the modulated signal.</p>
         <p>The carrier signal can be represented as:</p>
-        <center><p>c(t) = A<sub><sub>c</sub></sub> cos(2πf<sub><sub>c</sub></sub>t)</p></center>
+        
+        <p >c(t) = A<sub><sub>c</sub></sub> cos(2πf<sub><sub>c</sub></sub>t)</p>
+        
         <p>where A<sub><sub>c</sub></sub>is the amplitude of the carrier signal and f<sub><sub>c</sub></sub> is the
             frequency of the carrier signal.</p>
 
         <p>The message signal can be represented as:</p>
-        <center><p>m(t) = A<sub><sub>m</sub></sub> cos(2πf<sub><sub>m</sub></sub>t)</p></center>
+        
+        <p >m(t) = A<sub><sub>m</sub></sub> cos(2πf<sub><sub>m</sub></sub>t)</p>
+       
         <p>where A<sub><sub>m</sub></sub> is the amplitude of the message signal and f<sub>m</sub> is the frequency of
             the message signal.</p>
 
         <p>To generate the modulated signal s(t), we multiply the message signal with the carrier signal:</p>
-        <center><p>s(t) = (A<sub><sub>c</sub></sub> + A<sub><sub>m</sub></sub>
-            cos(2πf<sub><sub>m</sub></sub>t)) cos(2πf<sub><sub>c</sub></sub>t)</p></center>
+        
+        <p c>s(t) = (A<sub><sub>c</sub></sub> + A<sub><sub>m</sub></sub>
+            cos(2πf<sub><sub>m</sub></sub>t)) cos(2πf<sub><sub>c</sub></sub>t)</p>
+           
 
         <p>Expanding this expression using the trigonometric identity for the product of two cosines, we get:</p>
-        <center><p> s(t) = A<sub><sub>c</sub></sub> cos(2πf<sub><sub>c</sub></sub>t) + 0.5
+        <p > s(t) = A<sub><sub>c</sub></sub> cos(2πf<sub><sub>c</sub></sub>t) + 0.5
             A<sub><sub>m</sub></sub> cos(2π(f<sub><sub>c</sub></sub> + f<sub><sub>m</sub></sub>)t) + 0.5
-            A<sub><sub>m</sub></sub>cos(2π(f<sub><sub>c</sub></sub> - f<sub><sub>m</sub></sub>)t)</p></center>
+            A<sub><sub>m</sub></sub>cos(2π(f<sub><sub>c</sub></sub> - f<sub><sub>m</sub></sub>)t)</p>
         <p>Thus, the modulated signal s(t) contains three components: the carrier signal, and two sidebands that are
             spaced apart from the carrier frequency by the frequency of the message signal</p>
 
@@ -97,7 +103,7 @@
             <li>Envelope Detector</li>
         </ol>
 
-        <img src="/static/images/AM_MAIN/am_theory_3.jpg" alt="" width="300px">
+        <img src="/static/images/AM_MAIN/am_theory_3.jpg" alt="">
 
 
         <p>One of the methods used to demodulate AM signals is square-law demodulation, which is based on the non-linear
@@ -108,30 +114,30 @@
         <p>These two signals are applied as inputs to the summer (adder) block. This summer block produces an output,
             which is the addition of the modulating and the carrier signal. Mathematically, we can write it as</p>
 
-        <center><p>V<sub><sub>1</sub></sub>(t) = m(t) + A<sub><sub>c</sub></sub>cos(2πf<sub><sub>c</sub></sub>t)</p></center>
+        <p >V<sub><sub>1</sub></sub>(t) = m(t) + A<sub><sub>c</sub></sub>cos(2πf<sub><sub>c</sub></sub>t)</p>
 
         <p>This signal V<sub><sub>1</sub></sub>(t) is applied as an input to a nonlinear device like diode. The
             characteristics of the diode are closely related to square law.</p>
 
-        <center><p>V<sub><sub>2</sub></sub>(t) = k<sub><sub>1</sub></sub>V<sub><sub>1</sub></sub>(t) +
-            k<sub><sub>1</sub></sub>V<sub><sub>1</sub></sub><sup><sup>2</sup></sup>(t) ............. (Equation 1)</p></center>
+        <p >V<sub><sub>2</sub></sub>(t) = k<sub><sub>1</sub></sub>V<sub><sub>1</sub></sub>(t) +
+            k<sub><sub>1</sub></sub>V<sub><sub>1</sub></sub><sup><sup>2</sup></sup>(t) ............. (Equation 1)</p>
         <p>Where, k<sub>1</sub> and k<sub>2</sub> are constants.</p>
         <p>Substitute V<sub>1</sub>(t) in Equation 1</p>
 
-        <center><p>V<sub><sub>2</sub></sub>(t) = k<sub><sub>1</sub></sub> [m(t) +
+        <p >V<sub><sub>2</sub></sub>(t) = k<sub><sub>1</sub></sub> [m(t) +
             A<sub><sub>c</sub></sub>cos(2πf<sub><sub>c</sub></sub>t)] + k<sub><sub>2</sub></sub>
-            [m(t)+A<sub><sub>c</sub></sub>cos(2πf<sub><sub>c</sub></sub>t)]<sup><sup>2</sup></sup></p></center>
+            [m(t)+A<sub><sub>c</sub></sub>cos(2πf<sub><sub>c</sub></sub>t)]<sup><sup>2</sup></sup></p>
 
 
-        <center><p>V<sub><sub>2</sub></sub>(t)
+        <p >V<sub><sub>2</sub></sub>(t)
             =k<sub><sub>1</sub></sub>m(t)+
             k<sub><sub>1</sub></sub>A<sub><sub>c</sub></sub>cos(2πf<sub><sub>c</sub></sub>t)+k<sub><sub>2</sub></sub>m<sup><sup>2</sup></sup>(t)+k<sub><sub>2</sub></sub>A<sub><sub>c</sub></sub><sup><sup>2</sup></sup>cos<sup><sup>2</sup></sup>(2πf<sub><sub>c</sub></sub>t)+
             2k<sub><sub>2</sub></sub>m(t)A<sub><sub>c</sub></sub>cos(2πf<sub><sub>c</sub></sub>t)
-        </p></center>
+        </p>
 
 
-        <center><p>V<sub><sub>2</sub></sub>(t) = k<sub><sub>1</sub></sub>m(t) +k<sub>2</sub>m<sub><sub>2</sub></sub>(t)+k<sub>2</sub>A<sub>c</sub><sup>2</sup>cos<sup>2</sup>(2πf<sub>c</sub>t)+k<sub>1</sub>A<sub>c</sub>[1+(2k<sub>2</sub>/k<sub>1</sub>)m(t)]cos(2πf<sub>c</sub>t)
-        </p></center>
+        <p >V<sub><sub>2</sub></sub>(t) = k<sub><sub>1</sub></sub>m(t) +k<sub>2</sub>m<sup>2</sup>(t)+k<sub>2</sub>A<sub>c</sub><sup>2</sup>cos<sup>2</sup>(2πf<sub>c</sub>t)+k<sub>1</sub>A<sub>c</sub>[1+(2k<sub>2</sub>/k<sub>1</sub>)m(t)]cos(2πf<sub>c</sub>t)
+        </p>
 
 
 
@@ -143,31 +149,25 @@
 
         <p>Therefore, the output of square law modulator is</p>
 
-        <center><p>s(t)= k<sub><sub>1</sub></sub>A<sub><sub>c</sub></sub>[1+(2k<sub><sub>2</sub></sub> /
-            k<sub><sub>1</sub></sub>)m(t)]cos(2πf<sub><sub>c</sub></sub>t)</p></center>
+        <p>s(t)= k<sub><sub>1</sub></sub>A<sub><sub>c</sub></sub>[1+(2k<sub><sub>2</sub></sub> /
+            k<sub><sub>1</sub></sub>)m(t)]cos(2πf<sub><sub>c</sub></sub>t)</p>
 
         <p>The standard equation of AM wave is</p>
 
-        <center><p>s(t) = (A<sub><sub>c</sub></sub> + A<sub><sub>m</sub></sub> cos(2πf<sub><sub>m</sub></sub>t))
-            cos(2πf<sub><sub>c</sub></sub>t)</p></center>
+        <p>s(t) = (A<sub><sub>c</sub></sub> + A<sub><sub>m</sub></sub> cos(2πf<sub><sub>m</sub></sub>t))
+            cos(2πf<sub><sub>c</sub></sub>t)</p>
 
         <p>Where, K<sub><sub>a</sub></sub> is the amplitude sensitivity</p>
 
-        </span>
+        
 
-        <p>By comparing the output of the square law modulator with the standard equation of AM wave, we will get the
-            scaling factor as k<sub>1</sub>
-            and the amplitude sensitivity k<sub><sub>a</sub></sub> as
+        <p>By comparing the output of the square law modulator with the standard equation of AM wave, we will get the 
+        </p><p>scaling factor as k<sub><sub>1</sub></sub>
+        </p><p>the amplitude sensitivity k<sub><sub>a</sub></sub> as
             2k<sub><sub>2</sub></sub>/k<sub><sub>1</sub></sub>.</p>
 
 
-        </div>
-
-        <h4>Demodulation using Envelop Dectector</h4>
-        <p>Envelope detector is used to detect (demodulate) high level AM wave.</p>
-        <p>This envelope detector consists of a diode and low pass filter. Here, the diode is the main detecting element. Hence, the envelope detector is also called as the diode detector. The low pass filter contains a parallel combination of the resistor and the capacitor. The AM wave $s\left ( t \right )$ is applied as an input to this detector. We know the standard form of AM wave is </p> 
-        <p>In the positive half cycle of AM wave, the diode conducts and the capacitor charges to the peak value of AM wave. When the value of AM wave is less than this value, the diode will be reverse biased. Thus, the capacitor will discharge through resistor R till the next positive half cycle of AM wave. When the value of AM wave is greater than the capacitor voltage, the diode conducts and the process will be repeated. We should select the component values in such a way that the capacitor charges very quickly and discharges very slowly. As a result, we will get the capacitor voltage waveform same as that of the envelope of AM wave, which is almost similar to the modulating signal.</p>
-
+        
 
 
         <script src="../../static/main.js"></script>

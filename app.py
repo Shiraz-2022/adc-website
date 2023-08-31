@@ -11,6 +11,16 @@ from binascii import unhexlify
 import logging
 import json
 
+import firebase_admin
+from firebase_admin import credentials, db
+
+cred = credentials.Certificate("adc-lab-fc1a3-firebase-adminsdk-kth6o-4d220444fc.json")
+firebase_admin.initialize_app(
+    cred,
+    {
+        "databaseURL": "https://adc-lab-fc1a3-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    },
+)
 
 logger = logging.getLogger('waitress') # A logger is used to record events and messages during the program's execution
 logger.setLevel(logging.INFO) # This line sets the logging level of the logger to INFO. The logging level determines the importance of messages to be logged
@@ -37,6 +47,19 @@ def home():
     f = open('./data.json')# opens data.json
     data = json.load(f)["Home"] # loads data named HOME from data.json
     return render_template('home.html',data=data) # This renders the home.html file and passes data to home.html
+
+@app.route("/subbb", methods=["POST"])
+def submit_form():
+    if request.method == "POST":
+        name = request.form["name"]
+        subject = request.form["subject"]
+
+        # Push form data to the database
+        ref = db.reference("form_submissions")
+        new_data_ref = ref.push()
+        new_data_ref.set({"name": name, "subject": subject})
+
+        return redirect("/")
 
 @app.route('/references',methods=['GET'])
 def references():
