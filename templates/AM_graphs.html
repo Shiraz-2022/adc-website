@@ -13,7 +13,7 @@
       <li>Keep the carrier amplitude higher than the message amplitude.</li>
     </ol>
   </div>
-  <form action="/AM/{{am_type}}" method="POST">
+  <form id="modulation-form" onsubmit="handleSubmit('{{am_type}}')" method="POST">
     <div class="inputs">
       {% if am_type == "QAM" %}
       <div class="input-wrapper wrap">
@@ -51,7 +51,7 @@
       </div>  
       {% endif %}
       <div class="input-wrapper">
-        <label for="freqm">Message frequncy</label>
+        <label for="freqm">Message frequency</label>
           <input required type="number" id="freqm" name="fm" min="1000" max="50000" placeholder="message frequency">
       </div>
       <div class="input-wrapper">
@@ -69,10 +69,60 @@
 
     </div>
     <div class="buttons">
-      <button type="submit" id="submit-button">Show Resutls</button>
+      <button id="submit-button">Show Resutls</button>
     </div>
   </form>
 </div>
+
+<script>
+
+  const form = document.getElementById('modulation-form');
+  const typeOfMod = '{{am_type}}';
+
+function handleSubmit(mtype){
+    event.preventDefault();
+    
+    const inputValues = {};
+    const allInputs = {};
+    // console.log(mtype)
+   
+    const inputElements = form.querySelectorAll('input');
+    
+    inputElements.forEach(function(inputElement) {
+      inputValues[inputElement.name] = inputElement.value;
+    });
+
+    allInputs[mtype] = inputValues;
+    // console.log(allInputs);
+    
+    // Store input values in local storage
+    // localStorage.setItem('inputValues', JSON.stringify(inputValues));
+    localStorage.setItem('allInputs', JSON.stringify(allInputs));
+      
+
+    // Submit the form
+    form.submit();
+}
+  // Check if local storage contains saved input values
+  if (localStorage.getItem('allInputs')) {
+    const savedValues = JSON.parse(localStorage.getItem('allInputs'));
+    // console.log(typeOfMod);
+    // console.log(savedValues[typeOfMod]);
+    
+    const valuesRequired = savedValues[typeOfMod]
+    // Pre-fill the form fields with saved values
+    for (const value in valuesRequired) {
+      if (valuesRequired.hasOwnProperty(value)) {
+        const inputElement = form.querySelector(`[name="${value}"]`);
+        if (inputElement) {
+          inputElement.value = valuesRequired[value];
+        }
+      }
+    }
+   }
+
+</script>
+
 <div class="plot-wrapper"> 
   {% if inputs|length%}
     <div class="input-display-section">

@@ -8,24 +8,51 @@
   {%endwith%}
 <div class="container-full" id="graph-back">
 
-  <form action="/DM/{{dmtype}}" method="POST">
+  <form id="modulation-form" onsubmit="handleSubmit('{{dmtype}}')" method="POST">
     <div class="inputs"> 
-
-      <div class="input-wrapper">
-          <label for="freqc">Carrier Frequency (Fc)</label>
-          <input type="number" id="freqc" name="fc" class="input-bar" placeholder="eg: 10" required>
-      </div>
-
+      
       {% if dmtype == 'BFSK' %}
+      <div class="input-wrapper">
+        <label for="ampc">Carrier Amplitude</label>
+        <input type="number" id="ampc" name="Ac" min="1" class="input-bar" placeholder="amplitude" required>
+    </div>
+      <div class="input-wrapper">
+        <label for="freqc">Carrier1 Frequency</label>
+        <input type="number" id="freqc" name="fc1" class="input-bar" min="1000" max="50000" placeholder="frequency" required>
+    </div>
         <div class="input-wrapper">
-          <label for="freqc">Carrier Frequency 2 (Fc2)</label>
-          <input type="number" id="freqc" name="fc2" class="input-bar" placeholder="eg: 10" required>
+          <label for="freqc">Carrier2 Frequency</label>
+          <input type="number" id="freqc" name="fc2" class="input-bar" min="1000" max="50000" placeholder="frequency" required>
         </div>
+        {% elif dmtype == 'BASK' %}
+        <div class="input-wrapper">
+          <label for="freqc">Carrier Frequency</label>
+          <input type="number" id="freqc" name="fc" class="input-bar" min="1000" max="50000" placeholder="frequency" required>
+      </div>
+        <div class="input-wrapper">
+          <label for="ampc">Carrier1 Amplitude</label>
+          <input type="number" id="ampc" name="Ac1" min="1" class="input-bar"  placeholder="amplitude" required>
+      </div>
+          <div class="input-wrapper">
+            <label for="ampc">Carrier2 Amplitude</label>
+            <input type="number" id="ampc" name="Ac2" min="1" class="input-bar" placeholder="amplitude" required>
+          </div>
+
+      {% else %}
+      <div class="input-wrapper">
+        <label for="ampc">Carrier Amplitude</label>
+        <input type="number" id="ampc" name="Ac" min="1" class="input-bar" placeholder="amplitude" required>
+    </div>
+      <div class="input-wrapper">
+          <label for="freqc">Carrier Frequency</label>
+          <input type="number" id="freqc" name="fc" class="input-bar" min="1000" max="50000" placeholder="frequency" required>
+      </div>
       {% endif %}
 
+
       <div class="input-wrapper">
-        <label for="freqm">Bit Duration (Tb)</label>
-        <input type="number" id="freqm" name="Tb" placeholder="eg: 1" required>
+        <label for="freqm">Bit Duration</label>
+        <input type="number" id="freqm" min="1" name="Tb" placeholder="eg: 1" required>
       </div>
       <div class="input-wrapper">
           <label for="am">Input Binary Sequence</label>
@@ -36,12 +63,61 @@
     </div>
 
     <div class="buttons">
-      <button type="submit" id="submit-button">Show Resutls</button>
+      <button id="submit-button">Show Resutls</button>
       <!-- <button type="submit" id="Download-button">Download</button> -->
     </div>
   </form>
 
 </div>
+
+<script>
+
+  const form = document.getElementById('modulation-form');
+  const typeOfMod = '{{dmtype}}';
+
+function handleSubmit(mtype){
+    event.preventDefault();
+    
+    const inputValues = {};
+    const allInputs = {};
+    // console.log(mtype)
+   
+    const inputElements = form.querySelectorAll('input');
+    
+    inputElements.forEach(function(inputElement) {
+      inputValues[inputElement.name] = inputElement.value;
+    });
+
+    allInputs[mtype] = inputValues;
+    // console.log(allInputs);
+    
+    // Store input values in local storage
+    // localStorage.setItem('inputValues', JSON.stringify(inputValues));
+    localStorage.setItem('allInputs', JSON.stringify(allInputs));
+      
+
+    // Submit the form
+    form.submit();
+}
+  // Check if local storage contains saved input values
+  if (localStorage.getItem('allInputs')) {
+    const savedValues = JSON.parse(localStorage.getItem('allInputs'));
+    // console.log(typeOfMod);
+    // console.log(savedValues[typeOfMod]);
+    
+    const valuesRequired = savedValues[typeOfMod]
+    // Pre-fill the form fields with saved values
+    for (const value in valuesRequired) {
+      if (valuesRequired.hasOwnProperty(value)) {
+        const inputElement = form.querySelector(`[name="${value}"]`);
+        if (inputElement) {
+          inputElement.value = valuesRequired[value];
+        }
+      }
+    }
+   }
+
+</script>
 
 <div class="plot-wrapper">  
   {% if inputs|length%}
@@ -52,8 +128,8 @@
         <span>{{value}} 
           {%if key=="Am" or key=="Ac"%}
             Volts
-          {%elif key=="fm" or key=="fc" %}
-            KHz
+          {%elif key=="fm" or key=="fc1" or key=="fc2" %}
+            Hz
           {%endif%}
         </span>
       </article>

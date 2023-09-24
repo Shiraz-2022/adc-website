@@ -158,25 +158,50 @@ def DigitalModulation(dmtype):
 
     if (request.method=='POST'):
       Tb=float (request.form['Tb'])
-      fc=int (request.form['fc'])
-      binaryInput = str(request.form['inputBinarySeq'])
-      inputs = {"Tb":Tb,"fc":fc,"binaryInput":binaryInput}
-      fc2=1
+
       if(dmtype=='BFSK'):
+          Ac=int (request.form['Ac'])
+          fc1=int (request.form['fc1'])
           fc2=int (request.form['fc2'])
+          inputs['fc1'] = fc1
+          inputs['fc2'] = fc2
+          inputs['Ac'] = Ac
+
+      elif(dmtype=='BASK'):
+          fc=int (request.form['fc'])
+          Ac1=int (request.form['Ac1'])
+          Ac2=int (request.form['Ac2'])
+          inputs['Ac1'] = Ac1
+          inputs['Ac2'] = Ac2
+          inputs['fc'] = fc
+
+      else:    
+          fc=int (request.form['fc'])
+          Ac=int (request.form['Ac'])
+          inputs['fc'] = fc
+          inputs['Ac'] = Ac
+
+
+      binaryInput = str(request.form['inputBinarySeq'])
+      inputs = {"Tb":Tb,"binaryInput":binaryInput}
+      #   fc2=1
+
 
       # Change Binary string to array
       inputBinarySeq = np.array(list(binaryInput), dtype=int) # converts binary input into array
 
 
       if dmtype.upper() == 'BASK':
-          plots = BASK(Tb, fc, inputBinarySeq)
+          plots = BASK(Tb, fc,Ac1,Ac2, inputBinarySeq)
       elif dmtype.upper() == 'BFSK':
-          plots = BFSK(Tb, fc, fc2, inputBinarySeq)
+          plots = BFSK(Tb,Ac, fc1, fc2, inputBinarySeq)
+
       elif dmtype.upper() == 'BPSK':
-          plots = BPSK(Tb, fc, inputBinarySeq)
+          plots = BPSK(Tb,Ac, fc, inputBinarySeq)
+
       elif dmtype.upper() == 'QPSK':
-          plots = QPSK(Tb, fc, inputBinarySeq)
+          plots = QPSK(Tb,Ac, fc, inputBinarySeq)
+          
     return render_template('DM_graphs.html',dmtype=dmtype.upper(),title=title[dmtype], plots=plots,inputs=inputs)
 
 @app.route('/DM2/<dmtype>', methods=['GET','POST'])   # get and post for gmsk

@@ -4,108 +4,81 @@ import numpy as np
 from io import BytesIO
 
 
-def BASK(Tb, fc, inputBinarySeq):
-    t = np.arange(0, 1 + Tb / 100, Tb / 100)
-    c = np.sqrt(2 / Tb) * np.sin(
-        2 * np.pi * fc * t
-    )  # Equation for the carrier signal as a function of time
+import numpy as np
+import matplotlib.pyplot as plt
+from io import BytesIO
 
-    # Generate the message signal
-    m = inputBinarySeq
-    N = len(m)
+from .util import *
 
+def countNoOfDigits(f):
+    count = 0
+    while int(f) != 0: 
+        count = count+1
+        f=f/10
+    return count    
+
+    
+def countSpace(noOfDigits):
+    space = 0
+    while noOfDigits != 1: 
+        space = space * 10 + 1
+        noOfDigits = noOfDigits-1  
+    return space   
+
+def round_to_nearest_multiple(number):
+        length = len(str(number))
+        base = 10 ** (length - 1)
+        return base * round(number / base)
+
+
+def BASK(Tb, fc,Ac1,Ac2, inputBinarySeq):
+
+    fc = round_to_nearest_multiple(fc)
+    condition = 'line'
+    m = inputBinarySeq.reshape(-1, 1)
+    N = len(m) # length of binary sequence
+    
+    x_carrier = create_domain_AM()
+
+    t = np.arange(0, N * Tb, Tb / 100) 
+    A = np.sqrt(2 / Tb) 
     t1 = 0
     t2 = Tb
 
-    for i in range(N):
-        t = np.arange(
-            t1, t2 + 0.01, 0.01
-        )  # To obtain each data element, generate a random number m in [0,1]
-        if m[i] > 0.5:  # If m > 0.5 assign value of m=1, else assign m=0
-            m[i] = 1
-            m_s = np.ones(len(t))
-        else:
-            m[i] = 0
-            m_s = np.zeros(len(t))
-
-        message = np.zeros((N, len(t)))
-        message[i, :] = m_s
-
-        # Product of carrier and message
-        ask_sig = (
-            c * m_s
-        )  # The modulated signal is the product of the message signal level (dc level) and the carrier signal level (analog level)
-
-        t1 = t1 + (Tb + 0.01)
-        t2 = t2 + (Tb + 0.01)
-
-        # Plotting the message signal
-        plt.subplot(5, 1, 2)
-        plt.axis([0, N, -2, 2])
-        plt.plot(t, message[i, :], "r")
-        plt.title("message signal")
-        plt.xlabel("t")
-        plt.ylabel("m(t)")
-        plt.grid(True)
-
-        # Plotting the BASK signal (modulated signal)
-        plt.subplot(5, 1, 4)
-        plt.axis([0, N, -2, 2])
-        plt.plot(t, ask_sig)
-        plt.title("Amplitude Shift Keying")
-        plt.xlabel("t --->")
-        plt.ylabel("s(t)")
-        plt.grid(True)
-
-    # Save Message & Modulated Signal
-    data = BytesIO()
-    plt.savefig(data, format="png", bbox_inches="tight")
-    data.seek(0)
-    msg_mod = data.getvalue().hex()
-    plt.figure()
-
-    # Plotting the carrier signal
-    plt.subplot(5, 1, 3)
-    plt.plot(t, c)
-    plt.title("carrier signal")
-    plt.xlabel("t")
-    plt.ylabel("c(t)")
-    plt.grid(True)
-    # Save
-    data = BytesIO()
-    plt.savefig(data, format="png", bbox_inches="tight")
-    data.seek(0)
-    carrier = data.getvalue().hex()
-    plt.figure()
-
-    return [msg_mod, carrier]
-
-
-# ------- BFSK - Binary Frequency Shift Keying ----------
-def BFSK(Tb, fc1, fc2, inputBinarySeq):
-    # Binary Information
-    x = inputBinarySeq.reshape(-1, 1)
-    # bp = 0.000001  # bit period
-    bp = Tb
-
-    # Representation of transmitting binary information as digital signal
     bit = np.array([])
-    for n in range(len(x)):
-        if x[n] == 1:
+    
+    for n in range(N):
+        if m[n] == 1:
             se = np.ones(100)
         else:
             se = np.zeros(100)
-        bit = np.concatenate((bit, se))
+        bit = np.concatenate((bit, se)) 
+   
+    fDigits = countNoOfDigits(fc)
+    space = countSpace(fDigits) * 9    
 
-    t1 = np.arange(bp / 100, 100 * len(x) * (bp / 100) + bp / 100, bp / 100)
+    t2 = np.arange(Tb / 99, Tb + Tb / 99, Tb / space)
+
+    message = np.array([])
+    for i in range(N):
+        if m[i] == 1:
+            y = Ac1 * np.cos(2 * np.pi * fc * t2)
+        else:
+            y = Ac2 * np.cos(2 * np.pi * fc * t2)
+        message = np.concatenate((message, y))
+
+
+    #plotting message signal
+
     plt.subplot(3, 1, 1)
-    plt.plot(t1, bit, "b", linewidth=2.5)
+    plt.plot(t, bit, "b", linewidth=2.5)
     plt.grid(True)
-    plt.axis([0, bp * len(x), -0.5, 1.5])
+    plt.axis([0, Tb * N, -1, 2])
     plt.ylabel("Amplitude (V)")
     plt.xlabel("Time (s)")
     plt.title("Message signal")
     plt.grid(True)
+
     # Save
     data = BytesIO()
     plt.savefig(data, format="png", bbox_inches="tight")
@@ -113,40 +86,118 @@ def BFSK(Tb, fc1, fc2, inputBinarySeq):
     msg = data.getvalue().hex()
     plt.figure()
 
-    # Binary-FSK modulation
-    A = np.sqrt(2 / Tb)  # Amplitude of carrier signal
-    br = 1 / bp  # bit rate
-    f1 = br * fc1  # carrier frequency for information as 1
-    f2 = br * fc2  # carrier frequency for information as 0
-    # f1 = fc1
-    # f2 = fc2
-    t2 = np.arange(bp / 99, bp + bp / 99, bp / 99)
-    m = np.array([])
-    for i in range(len(x)):
-        if x[i] == 1:
-            y = A * np.cos(2 * np.pi * f1 * t2)
-        else:
-            y = A * np.cos(2 * np.pi * f2 * t2)
-        m = np.concatenate((m, y))
 
-    # Plotting the carrier signal
-    plt.subplot(5, 1, 3)
-    plt.plot(t2, y)
-    plt.title("carrier signal")
-    plt.xlabel("t")
-    plt.ylabel("c(t)")
+    c1 = Ac1 * np.cos(2 * np.pi * fc * x_carrier)
+    c2 = Ac2 * np.cos(2 * np.pi * fc * x_carrier)
+
+    carrier1 = plot_graph(condition = condition, x = x_carrier, y = c1, title = "Carrier Signal",color='g')
+    carrier2 = plot_graph(condition = condition, x = x_carrier, y = c2, title = "Carrier Signal",color='g')
+
+    t3 = np.arange(Tb / 99, Tb * N + Tb / 99,Tb / space)
+    plt.subplot(3, 1, 2)
+    if Ac1 > Ac2 :
+        plt.axis([0, Tb * N, -Ac1 - 5, Ac1 + 5])
+    else:  
+        plt.axis([0, Tb * N, -Ac2 - 5, Ac2 + 5])  
+    plt.plot(t3, message, "r")
+    plt.grid(True)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude (V)")
+    plt.title("Modulated Wave")
     plt.grid(True)
     # Save
     data = BytesIO()
     plt.savefig(data, format="png", bbox_inches="tight")
     data.seek(0)
-    carrier = data.getvalue().hex()
+    mod = data.getvalue().hex()
     plt.figure()
 
+    plt.close('all')  # Close all plots
+
+    # return [msg_mod, carrier]
+    return [msg,carrier1,carrier2,mod]
+
+
+
+# ------- BFSK - Binary Frequency Shift Keying ----------
+
+
+def BFSK(Tb,Ac, fc1, fc2, inputBinarySeq):
+    # Binary Information
+    x = inputBinarySeq.reshape(-1, 1) # By using -1, NumPy will automatically calculate the appropriate number of rows and 1 is no fo columns
+  
+    bp = Tb #but period
+    condition = "line"
+    fc1 = round_to_nearest_multiple(fc1)
+    fc2 = round_to_nearest_multiple(fc2)
+    # Representation of transmitting binary information as digital signal
+    bit = np.array([])
+    
+    for n in range(len(x)):
+        if x[n] == 1:
+            se = np.ones(100)
+        else:
+            se = np.zeros(100)
+        bit = np.concatenate((bit, se))
+
+    t1 = np.arange(0, len(x) * bp, bp / 100)
+
+ 
+
+    # Binary-FSK modulation
+    # A = np.sqrt(2 / Tb)  # Amplitude of carrier signal
+    br = 1 / bp  # bit rate
+    f1 = br * fc1  # carrier frequency for information as 1
+    f2 = br * fc2  # carrier frequency for information as 0
+
+    if f2>f1:
+        fDigits = countNoOfDigits(f2)
+    else:
+        fDigits = countNoOfDigits(f1)    
+
+    space = countSpace(fDigits) * 9    
+
+    t2 = np.arange(bp / 99, bp + bp / 99, bp / space)
+    m = np.array([])
+    for i in range(len(x)):
+        if x[i] == 1:
+            y = Ac * np.cos(2 * np.pi * f1 * t2)
+        else:
+            y = Ac * np.cos(2 * np.pi * f2 * t2)
+        m = np.concatenate((m, y))
+
+
+    #ploting message signal
+
+    plt.subplot(3, 1, 1)
+    plt.plot(t1, bit, "b", linewidth=2.5)
+    plt.grid(True)
+    plt.axis([0, bp * len(x), -1, 2])
+    plt.ylabel("Amplitude (V)")
+    plt.xlabel("Time (s)")
+    plt.title("Message signal")
+    plt.grid(True)
+
+    # Save
+    data = BytesIO()
+    plt.savefig(data, format="png", bbox_inches="tight")
+    data.seek(0)
+    msg = data.getvalue().hex()
+    plt.figure()
+
+
+
+    x_carrier = create_domain_AM()
+    c1 = Ac * np.cos(2 * np.pi * fc1 * x_carrier)
+    c2 = Ac * np.cos(2 * np.pi * fc2 * x_carrier)
+
+    carrier1 = plot_graph(condition = condition, x = x_carrier, y = c1, title = "Carrier Signal 1",color='g')
+    carrier2 = plot_graph(condition = condition, x = x_carrier, y = c2, title = "Carrier Signal 2",color='g')
+
     # Modulated Signal
-    t3 = np.arange(bp / 99, bp * len(x) + bp / 99, bp / 99)
+    t3 = np.arange(bp / 99, bp * len(x) + bp / 99, bp / space)
     plt.subplot(3, 1, 2)
-    plt.axis([0, bp * len(x), -A - 5, A + 5])
+    plt.axis([0, bp * len(x), -Ac - 5, Ac + 5])
     plt.plot(t3, m, "r")
     plt.grid(True)
     plt.xlabel("Time (s)")
@@ -160,16 +211,17 @@ def BFSK(Tb, fc1, fc2, inputBinarySeq):
     mod = data.getvalue().hex()
     plt.figure()
 
-    return [msg, carrier, mod]
+    return [msg, carrier1, carrier2, mod]
 
 
 # ------------- BPSK - Binary Phase Shift Keying ---------
-def BPSK(Tb, fc, inputBinarySeq):
+def BPSK(Tb,Ac, fc, inputBinarySeq):
     # x = np.array([1, 0, 0, 1, 1, 0, 1])  # Binary Information
     x = inputBinarySeq.reshape(-1, 1)
+    condition = 'line'
     # bp = 0.000001  # bit period
     bp = Tb
-    fc = fc / 10
+    fc = round_to_nearest_multiple(fc)
     # Transmitting binary information as digital signal
     bit = np.array([])
     for n in range(len(x)):
@@ -183,7 +235,7 @@ def BPSK(Tb, fc, inputBinarySeq):
     plt.subplot(3, 1, 1)
     plt.plot(t1, bit, linewidth=2.5)
     plt.grid(True)
-    plt.axis([0, bp * len(x), -0.5, 1.5])
+    plt.axis([0, bp * len(x), -1, 2])
     plt.ylabel("Amplitude(Volt)")
     plt.xlabel("Time(sec)")
     plt.title("Message Signal")
@@ -196,38 +248,47 @@ def BPSK(Tb, fc, inputBinarySeq):
     plt.figure()
 
     # Binary-PSK modulation
-    A = np.sqrt(2 / Tb)  # Amplitude of carrier signal
+    # A = np.sqrt(2 / Tb)  # Amplitude of carrier signal
     br = 1 / bp  # bit rate
     f = br * 2  # carrier frequency
-    t2 = np.arange(bp / 99, bp + bp / 99, bp / 99)
+
+    fDigits = countNoOfDigits(fc)
+    space = countSpace(fDigits) * 9   
+
+    t2 = np.arange(bp / 99, bp + bp / 99, bp / space)
     ss = len(t2)
     m = np.array([])
     for i in range(len(x)):
         if x[i] == 1:
-            y = A * np.cos(2 * np.pi * fc * f * t2)
+            y = Ac * np.cos(2 * np.pi * fc * f * t2)
         else:
-            y = A * np.cos(2 * np.pi * fc * f * t2 + np.pi)
+            y = Ac * np.cos(2 * np.pi * fc * f * t2 + np.pi)
         m = np.concatenate([m, y])
 
+    x_carrier = create_domain_AM()
+    c = Ac * np.cos(2 * np.pi * fc * x_carrier)
+
+    carrier = plot_graph(condition = condition, x = x_carrier, y = c, title = "Carrier Signal",color='g')
+
     # Plotting the carrier signal
-    plt.subplot(5, 1, 3)
-    plt.plot(t2, y)
-    plt.title("carrier signal")
-    plt.xlabel("t")
-    plt.ylabel("c(t)")
-    plt.grid(True)
-    # Save
-    data = BytesIO()
-    plt.savefig(data, format="png", bbox_inches="tight")
-    data.seek(0)
-    carrier = data.getvalue().hex()
-    plt.figure()
+    # plt.subplot(5, 1, 3)
+    # plt.plot(t2, y)
+    # plt.title("carrier signal")
+    # plt.xlabel("t")
+    # plt.ylabel("c(t)")
+    # plt.grid(True)
+    # # Save
+    # data = BytesIO()
+    # plt.savefig(data, format="png", bbox_inches="tight")
+    # data.seek(0)
+    # carrier = data.getvalue().hex()
+    # plt.figure()
 
     # Modulated
-    t3 = np.arange(bp / 99, bp * len(x) + bp / 99, bp / 99)
+    t3 = np.arange(bp / 99, bp * len(x) + bp / 99, bp / space)
     plt.subplot(3, 1, 2)
     plt.plot(t3, m, "r")
-    plt.axis([0, bp * len(x), -A - 5, A + 5])
+    plt.axis([0, bp * len(x), -Ac - 5, Ac + 5])
     plt.xlabel("Time(sec)")
     plt.ylabel("Amplitude(Volt)")
     plt.title("Modulated Wave")
@@ -243,75 +304,56 @@ def BPSK(Tb, fc, inputBinarySeq):
 
 
 # ------- QPSK ---------------
-def QPSK(Tb, fc, inputBinarySeq):
+def QPSK(Tb,Ac, fc, inputBinarySeq):
     t = np.linspace(0, 1, 100)  # Time
-
-    c1 = np.sqrt(2 / Tb) * np.cos(2 * np.pi * fc * t)  # carrier frequency cosine wave
-    c2 = np.sqrt(2 / Tb) * np.sin(2 * np.pi * fc * t)  # carrier frequency sine wave
-
-    plt.subplot(3, 1, 2)
-    plt.plot(t, c1)
-    plt.xlabel("Time (Number of samples)")
-    plt.ylabel("Cos Wave")
-    plt.title("Carrier Wave 1 (Cosine)")
-    plt.grid(True)
-    # Save
-    data = BytesIO()
-    plt.savefig(data, format="png", bbox_inches="tight")
-    data.seek(0)
-    carrier1 = data.getvalue().hex()
-    plt.figure()
-
-    plt.subplot(3, 1, 2)
-    plt.plot(t, c2)
-    plt.xlabel("Time (Number of samples)")
-    plt.ylabel("Sine Wave")
-    plt.title("Carrier Wave 2 (Sine)")
-    plt.grid(True)
-    # Save
-    data = BytesIO()
-    plt.savefig(data, format="png", bbox_inches="tight")
-    data.seek(0)
-    carrier2 = data.getvalue().hex()
-    plt.figure()
+    condition = 'line'
 
     m = inputBinarySeq.reshape(-1, 1)
-    t1 = 0
-    t2 = Tb
+    N = len(m)
 
-    ## modulation
-    odd_sig = np.zeros((len(m), 100))
-    even_sig = np.zeros((len(m), 100))
+    bit = np.array([])
+    for n in range(N):
+        if m[n] == 1:
+            se = np.ones(100)
+        else:
+            se = np.zeros(100)
+        bit = np.concatenate([bit, se])
 
+
+    # t1 = 0
+    # t2 = Tb
+    t2 = np.arange(Tb / 99, Tb + Tb / 99, Tb / 99)
+    s = np.array([])
+    for i in range(0, N, 2):
+        if m[i] == 0 and m[i+1] == 0:
+            y = Ac * np.cos(2 * np.pi * fc * t2 + np.pi/4)
+        elif m[i] == 0 and m[i+1] == 1:
+            y = Ac * np.cos(2 * np.pi * fc * t2 + 3*(np.pi/4))
+        elif m[i] == 1 and m[i+1] == 0:
+            y = Ac * np.cos(2 * np.pi * fc * t2 + 5*(np.pi/4))
+        elif m[i] == 1 and m[i+1] == 1:
+            y = Ac * np.cos(2 * np.pi * fc * t2 + 7*(np.pi/4))
+        s = np.concatenate([s, y])
+
+
+    x_carrier = create_domain_AM()
+
+    c1 = Ac * np.sqrt(2 / Tb) * np.cos(2 * np.pi * fc * x_carrier)  # carrier frequency cosine wave
+    c2 = Ac * np.sqrt(2 / Tb) * np.sin(2 * np.pi * fc * x_carrier)  # carrier frequency sine wave
+
+    carrier1 = plot_graph(condition = condition, x = x_carrier, y = c1, title = "Carrier Signal 1",color='g')
+    carrier2 = plot_graph(condition = condition, x = x_carrier, y = c2, title = "Carrier Signal 2",color='g')
+
+
+    t3 = np.arange(Tb / 99, Tb * N + Tb / 99, Tb / 99)
     plt.subplot(3, 1, 2)
-    for i in range(0, len(m) - 1, 2):
-        t = np.linspace(t1, t2, 100)
-        if m[i] > 0.5:
-            m[i] = 1
-            m_s = np.ones((1, len(t)))
-        else:
-            m[i] = 0
-            m_s = (-1) * np.ones((1, len(t)))
-
-        odd_sig[i, :] = c1 * m_s
-
-        if m[i + 1] > 0.5:
-            m[i + 1] = 1
-            m_s = np.ones((1, len(t)))
-        else:
-            m[i + 1] = 0
-            m_s = (-1) * np.ones((1, len(t)))
-
-        even_sig[i, :] = c2 * m_s
-
-        qpsk = odd_sig + even_sig  # modulated wave = oddbits + evenbits
-
-        plt.plot(t, qpsk[i, :])
-        t1 = t1 + (Tb + 0.01)
-        t2 = t2 + (Tb + 0.01)
-
+    plt.plot(t3, s, "r")
+    plt.axis([0, Tb * N, -Ac - 5, Ac + 5])
+    plt.xlabel("Time(sec)")
+    plt.ylabel("Amplitude(Volt)")
     plt.title("Modulated Wave")
     plt.grid(True)
+
     # Save
     data = BytesIO()
     plt.savefig(data, format="png", bbox_inches="tight")
@@ -319,12 +361,16 @@ def QPSK(Tb, fc, inputBinarySeq):
     modSignal = data.getvalue().hex()
     plt.figure()
 
-    # Message Signal
-    plt.figure()
-    plt.subplot(3, 1, 2)
-    plt.stem(range(len(m)), m, use_line_collection=True)
-    plt.ylabel("16 bits data")
-    plt.title("Message signal (Binary)")
+
+    
+    t1 = np.arange(Tb / 100, 100 * N * (Tb / 100) + Tb / 100, Tb / 100)
+    plt.subplot(3, 1, 1)
+    plt.plot(t1, bit, linewidth=2.5)
+    plt.grid(True)
+    plt.axis([0, Tb * N, -1, 2])
+    plt.ylabel("Amplitude(Volt)")
+    plt.xlabel("Time(sec)")
+    plt.title("Message Signal")
     plt.grid(True)
     # Save
     data = BytesIO()
@@ -334,6 +380,93 @@ def QPSK(Tb, fc, inputBinarySeq):
     plt.figure()
 
     return [msgSignal, carrier1, carrier2, modSignal]
+    
+    ## modulation
+    # odd_sig = np.zeros((len(m), 100))
+    # even_sig = np.zeros((len(m), 100))
+
+    # plt.subplot(3, 1, 2)
+    # for i in range(0, len(m) - 1, 2):
+    #     t = np.linspace(t1, t2, 100)
+    #     if m[i] > 0.5:
+    #         m[i] = 1
+    #         m_s = np.ones((1, len(t)))
+    #     else:
+    #         m[i] = 0
+    #         m_s = (-1) * np.ones((1, len(t)))
+
+    #     odd_sig[i, :] = c1 * m_s
+
+    #     if m[i + 1] > 0.5:
+    #         m[i + 1] = 1
+    #         m_s = np.ones((1, len(t)))
+    #     else:
+    #         m[i + 1] = 0
+    #         m_s = (-1) * np.ones((1, len(t)))
+
+    #     even_sig[i, :] = c2 * m_s
+
+    #     qpsk = odd_sig + even_sig  # modulated wave = oddbits + evenbits
+
+    #     plt.plot(t, qpsk[i, :])
+    #     t1 = t1 + (Tb + 0.01)
+    #     t2 = t2 + (Tb + 0.01)
+
+
+    # plt.title("Modulated Wave")
+    # plt.grid(True)
+    # # Save
+    # data = BytesIO()
+    # plt.savefig(data, format="png", bbox_inches="tight")
+    # data.seek(0)
+    # modSignal = data.getvalue().hex()
+    # plt.figure()
+
+
+    # # Message Signal
+    # plt.figure()
+    # plt.subplot(3, 1, 2)
+    # plt.stem(range(len(m)), m, use_line_collection=True)
+    # plt.ylabel("Binary value")
+    # plt.title("Message signal")
+    # plt.grid(True)
+    # # Save
+    # data = BytesIO()
+    # plt.savefig(data, format="png", bbox_inches="tight")
+    # data.seek(0)
+    # msgSignal = data.getvalue().hex()
+    # plt.figure()
+
+    # plt.subplot(3, 1, 2)
+    # plt.plot(t, c1)
+    # plt.xlabel("Time (Number of samples)")
+    # plt.ylabel("Cos Wave")
+    # plt.title("Carrier Wave 1 (Cosine)")
+    # plt.grid(True)
+    # # Save
+    # data = BytesIO()
+    # plt.savefig(data, format="png", bbox_inches="tight")
+    # data.seek(0)
+    # carrier1 = data.getvalue().hex()
+    # plt.figure()
+
+    # plt.subplot(3, 1, 2)
+    # plt.plot(t, c2)
+    # plt.xlabel("Time (Number of samples)")
+    # plt.ylabel("Sine Wave")
+    # plt.title("Carrier Wave 2 (Sine)")
+    # plt.grid(True)
+    # # Save
+    # data = BytesIO()
+    # plt.savefig(data, format="png", bbox_inches="tight")
+    # data.seek(0)
+    # carrier2 = data.getvalue().hex()
+    # plt.figure()
+
+
+
+
+
 
 
 # ------- GMSK ---------------

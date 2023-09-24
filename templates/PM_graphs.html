@@ -72,7 +72,7 @@
       </div>
       {% endif %}
 
-    <form action="/PM/{{pmtype}}" method="POST">
+    <form id="modulation-form" onsubmit="handleSubmit('{{pmtype}}')" method="POST">
       <div class="inputs">
 
         <div class="input-wrapper">
@@ -128,7 +128,7 @@
         {% else %}
         <div class="input-wrapper">
           <label for="Signal Frequency">Pulse Frequency</label>
-          <input type="number" id="Signal Frequency" name="fs" min="300" max="5000" class="input-bar" required>
+          <input type="number" id="Signal Frequency" name="fs" min="300" class="input-bar" required>
         </div>
         {% endif %}
 
@@ -152,12 +152,61 @@
       </div>
 
       <div class="buttons">
-        <button type="submit" id="submit-button">Show Resutls</button>
+        <button id="submit-button">Show Resutls</button>
         <!-- <button type="submit" id="Download-button">Download</button> -->
       </div>
     </form>
 
   </div>
+
+  <script>
+
+    const form = document.getElementById('modulation-form');
+    const typeOfMod = '{{pmtype}}';
+  
+  function handleSubmit(mtype){
+      event.preventDefault();
+      
+      const inputValues = {};
+      const allInputs = {};
+      // console.log(mtype)
+     
+      const inputElements = form.querySelectorAll('input');
+      
+      inputElements.forEach(function(inputElement) {
+        inputValues[inputElement.name] = inputElement.value;
+      });
+  
+      allInputs[mtype] = inputValues;
+      // console.log(allInputs);
+      
+      // Store input values in local storage
+      // localStorage.setItem('inputValues', JSON.stringify(inputValues));
+      localStorage.setItem('allInputs', JSON.stringify(allInputs));
+        
+  
+      // Submit the form
+      form.submit();
+  }
+    // Check if local storage contains saved input values
+    if (localStorage.getItem('allInputs')) {
+      const savedValues = JSON.parse(localStorage.getItem('allInputs'));
+      // console.log(typeOfMod);
+      // console.log(savedValues[typeOfMod]);
+      
+      const valuesRequired = savedValues[typeOfMod]
+      // Pre-fill the form fields with saved values
+      for (const value in valuesRequired) {
+        if (valuesRequired.hasOwnProperty(value)) {
+          const inputElement = form.querySelector(`[name="${value}"]`);
+          if (inputElement) {
+            inputElement.value = valuesRequired[value];
+          }
+        }
+      }
+     }
+  
+  </script>
 
   <div class="plot-wrapper">
     {% if inputs|length%}

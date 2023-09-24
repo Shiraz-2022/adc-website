@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>References</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <style>
     *{
       list-style-type:none ;
@@ -21,6 +21,20 @@
       max-width: calc(100% - 3rem);
       margin-top: 50px;
     }
+    .tech{
+      padding: 20px;
+    }
+    .ref{
+      padding: 20px;
+    }
+    @media (max-width: 767px) {
+      .tech{
+        padding-bottom: 30px;
+      }
+       .ref{
+        padding-top: 70px;
+       }
+      }
   </style>
 </head>
 <body>
@@ -29,61 +43,62 @@
         <div class="container-fluid d-flex justify-content-center">
               <div class="container-fluid w-100 justify-content-center">
                 <div class="row">
-                    <div class="col-sm-6" >
-                        <h2>Tech Stack Used</h2>
+                    <div class="col-lg-6 tech" >
+                        <h2 class="tech">Tech Stack used</h2>
                         <ul class="row">
-                          <div class="col-6">
+                          <div class="col-3">
                             <li>
                               <img src="https://img.icons8.com/color/50/000000/html-5--v1.png" alt="HTML logo">
-                              HTML
+                             
                           </li>
                           <br>
                           <li>
                               <img src="https://img.icons8.com/color/50/000000/css3.png" alt="CSS logo">
-                              CSS
+                             
                           </li>
                           <br>
                           <li>
                               <img src="https://img.icons8.com/color/50/000000/javascript--v1.png" alt="JavaScript logo">
-                              JavaScript
+                              
                           </li>
                           <br>
-                          <li>
-                            <img src="https://d33wubrfki0l68.cloudfront.net/e33fd6f372aa5d51e7b0de4bd763bd983251881e/4b0f4/blog/customising-matplotlib/matplot_title_logo.png" alt="JavaScript logo" style="height:75px">
-                          </li>
+                          
+                        <li>
+                          <img src="https://img.icons8.com/fluency/50/000000/github.png" alt="GitHub logo">
+                         
+                      </li>
 
                         </div>
                           <div class="col-6">
                             <li>
-                                <img src="https://img.icons8.com/fluency/50/000000/github.png" alt="GitHub logo">
-                                GitHub
-                            </li>
+                              <img src="https://user-images.githubusercontent.com/98330/64479472-4b35c900-d16c-11e9-8d49-71fc02cd539f.png" style="width: 75px;height: 75px;" alt="Python logo">
+                             
+                          </li>
                             <br>
                             <li>
                                 <img src="https://img.icons8.com/color/50/000000/flask.png" alt="Flask logo">
-                                Flask
+                                
                             </li>
                             <br>
                             <li>
                                 <img src="https://img.icons8.com/color/50/000000/python--v1.png" alt="Python logo">
-                                Python
+                                
                             </li>
-                            <li>
-                              <img src="https://user-images.githubusercontent.com/98330/64479472-4b35c900-d16c-11e9-8d49-71fc02cd539f.png" style="width: 75px;height: 75px;" alt="Python logo">
-                              Numpy
+                            
+                          <li>
+                            <img src="https://d33wubrfki0l68.cloudfront.net/e33fd6f372aa5d51e7b0de4bd763bd983251881e/4b0f4/blog/customising-matplotlib/matplot_title_logo.png" alt="JavaScript logo" style="height:75px">
                           </li>
-
                           </div>
                         </ul>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-lg-6 ref">
                       <div class="row w-100">
-                        <h2>References Used</h2>
+                        <h2>References used for web developement</h2>
                         <ul>
-                          <h1 class="display-6" style="white-space: nowrap">For web developemnt</h1>
+                         
                         <li>
-                          <a href="https://developer.mozilla.org/en-US/">
-                            MDN Web Docs
+                          <a href="https://railway.app">
+                            Railway App Hosting
                           </a>
                         </li>
                         <li>
@@ -100,7 +115,8 @@
                     </div>
                     <div class="row w-100">
                       <ul>
-                        <h1 class="display-6" style="white-space: nowrap">For Generating graphs<br/> and concept</h1>
+                        <h2>For generating graphs and concept</h2>
+                        
                       <li>
                           Lathi, B. P. Modern Digital and Analog Communication Systems. 4th ed., Oxford University Press, 2009.
                       </li>
@@ -121,6 +137,7 @@
   </div>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
