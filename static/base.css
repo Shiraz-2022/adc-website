@@ -50,6 +50,13 @@ label{
     right: 5vw;
 }
 
+.graph-buttons{
+    display: flex;
+    justify-content: center;
+    gap:40px;
+    margin-top: 30px;
+}
+
 input,select{
     padding: .25rem;
     font-size: 18px;

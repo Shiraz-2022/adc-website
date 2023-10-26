@@ -68,9 +68,15 @@
   </div>
 
     </div>
+    <div class="graph-buttons">
     <div class="buttons">
       <button id="submit-button">Show Resutls</button>
     </div>
+    <div class="buttons">
+      <button id="downloadAllButton">Download</button>
+     
+    </div>
+  </div>
   </form>
 </div>
 
@@ -120,6 +126,28 @@ function handleSubmit(mtype){
       }
     }
    }
+
+
+   //////////////////////////////////
+
+   function downloadAllImages() {
+            // Create a container for the images
+            var images = document.querySelectorAll("img");
+            var zip = new JSZip();
+
+            images.forEach(function(image, index) {
+                var imageBase64 = image.src.split(",")[1];
+                zip.file("image_" + index + ".png", imageBase64, { base64: true });
+            });
+
+            zip.generateAsync({ type: "blob" })
+                .then(function(content) {
+                    saveAs(content, "images.zip");
+                });
+        }
+
+        // Add an event listener to the download all button
+        document.getElementById('downloadAllButton').addEventListener('click', downloadAllImages);
 
 </script>
 

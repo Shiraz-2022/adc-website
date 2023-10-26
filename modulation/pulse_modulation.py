@@ -642,6 +642,7 @@ def PWM(inputs):
     x = np.linspace(-500, 500, 1000000)
 
     fm = round_to_nearest_multiple(fm)
+    fs = round_to_nearest_multiple(fs)
 
     sampling_rate = 1000000  # Number of samples per second
     #frequency = 10  # Frequency of the PWM signal in Hz
@@ -660,7 +661,7 @@ def PWM(inputs):
         message = triangular(fm, Am, x)
 
     # Generate time values
-    t = np.linspace(0, duration, int(sampling_rate * duration))
+    t = np.linspace(-10, 10, int(sampling_rate * duration))
     normalized_message = (message - message.min()) / (message.max() - message.min())
 
     # Generate duty cycle based on the normalized message signal
@@ -693,17 +694,21 @@ def PAM(inputs):
     x = np.linspace(-500, 500, 1000000)
 
     fm = round_to_nearest_multiple(fm)
+    fs = round_to_nearest_multiple(fs)
 
     pulse_width = 0.01  # Pulse width in seconds
     pulse_period = 0.1  # Pulse period in seconds
     duration = 1.0  # Duration of the signal in seconds
     sampling_rate = 1000000  # Sampling rate in Hz
-    modulation_index = 0.8
 
-    # t = np.linspace(-500, 500, 1000000)
-    pulse = 0.5 * (1 + np.sign(np.sin(2 * np.pi * fs * x)))
 
-   
+    # pulse = 0.5 * (1 + np.sign(np.sin(2 * np.pi * fs * x)))
+    if fs <= 40000:
+        t = np.linspace(-10, 10, 1000000)
+    else:
+        t = np.linspace(-1, 1, 1000000)
+
+    pulse = 1+signal.square(2 * np.pi * fs * t)
 
     if message_type == "sin":
         message = Am*np.sin(2 * np.pi * fm * x)
@@ -712,19 +717,13 @@ def PAM(inputs):
     elif message_signal=='tri':
         message = triangular(fm, Am, x_message)
 
-    modulated_wave = message * pulse * modulation_index
+    modulated_wave = message * pulse
 
-    
-    #carrier = Ac * np.sin(2*np.pi*fc*x)
-    #carrier = Ac * np.cos(2 * np.pi * fc * x)
-    #k = Ac / Am  # Modulation index
-    #modulated_wave = (1 + k * message) * carrier
-    #modulated = Ac * (1 + k * message) * np.sin(2*np.pi*fc*x)
 
     a = plot_graph(x, message, title="Message",condition="plot",color="red")
     b = plot_graph(x, pulse, title="Pulse",condition="plot",color="green")
     c = plot_graph(x, modulated_wave, title="Modulated wave",condition="plot",color="blue")
-    #d = plot_graph(x, demodulated_wave, title="Demodulated wave",condition="plot",color="blue")
+
 
     return [a,b,c]
 
@@ -771,56 +770,6 @@ def QUANTIZATION(inputs):
 
     return [a,b]
 
-# def SAMPLING(inputs):
-#     #[Am,Ac,fm,fc,message_type,fs] = inputs
-#     [fm,Am,message_type,fs] = inputs
-#     #N  = 1000
-  
-#     fm = round_to_nearest_multiple(fm)
-#         #x = np.linspace(0,1,fs)
-
-#     #pulse_width = 0.01  # Pulse width in seconds
-#     #pulse_period = 0.1  # Pulse period in seconds
-#     #duration = 1.0  # Duration of the signal in seconds
-#     x = np.linspace(-1000, 1000, 1000000)
-#     y = np.linspace(-1000, 1000, 1000000)
-
-#     sampling_rate = 1000000  # Sampling rate in Hz
-
-#     if(fs <= 500):
-#         x = np.linspace(-1000, 1000, 1000000)
-#         sampling_rate = 1000000  # Sampling rate in Hz
-    
-#     else:
-#         x = np.linspace(-100000, 100000, 1000000)
-#         sampling_rate = 1000000  # Sampling rate in Hz
-    
-
-#     # t = np.linspace(-500, 500, 1000000)
-#     # pulse = 1 + np.sign(np.sin(2 * np.pi * fs * x))
-#     pulse = 1+signal.square(2 * np.pi * fs * x)
-
-   
-
-#     if message_type == "sin":
-#         message = Am*np.sin(2 * np.pi * fm * x)
-#     elif message_type == "cos":
-#         message = Am*np.cos(2 * np.pi * fm * x)
-
-#     modulated_wave = message * pulse 
-
-    
-#     #carrier = Ac * np.sin(2*np.pi*fc*x)
-#     #carrier = Ac * np.cos(2 * np.pi * fc * x)
-#     #k = Ac / Am  # Modulation index
-#     #modulated_wave = (1 + k * message) * carrier
-#     #modulated = Ac * (1 + k * message) * np.sin(2*np.pi*fc*x)
-
-#     a = plot_graph(y, message, title="Message",condition="plot",color="red")
-#     b = plot_graph(x, pulse, title="Pulse",condition="plot",color="green")
-#     c = plot_graph(x, modulated_wave, title="Sampled wave",condition="plot",color="blue")
-    
-#     return [a,b,c]
 
 def SAMPLING(inputs):
     #[Am,Ac,fm,fc,message_type,fs] = inputs
@@ -829,16 +778,21 @@ def SAMPLING(inputs):
     x = np.linspace(-500, 500, 1000000)
 
     fm = round_to_nearest_multiple(fm)
+    fs = round_to_nearest_multiple(fs)
 
     pulse_width = 0.01  # Pulse width in seconds
     pulse_period = 0.1  # Pulse period in seconds
     duration = 1.0  # Duration of the signal in seconds
     sampling_rate = 1000000  # Sampling rate in Hz
 
-    # t = np.linspace(-500, 500, 1000000)
-    pulse = 0.5 * (1 + np.sign(np.sin(2 * np.pi * fs * x)))
 
-   
+    # pulse = 0.5 * (1 + np.sign(np.sin(2 * np.pi * fs * x)))
+    if fs <= 40000:
+        t = np.linspace(-10, 10, 1000000)
+    else:
+        t = np.linspace(-1, 1, 1000000)
+
+    pulse = 1+signal.square(2 * np.pi * fs * t)
 
     if message_type == "sin":
         message = Am*np.sin(2 * np.pi * fm * x)
@@ -849,16 +803,10 @@ def SAMPLING(inputs):
 
     modulated_wave = message * pulse
 
-    
-    #carrier = Ac * np.sin(2*np.pi*fc*x)
-    #carrier = Ac * np.cos(2 * np.pi * fc * x)
-    #k = Ac / Am  # Modulation index
-    #modulated_wave = (1 + k * message) * carrier
-    #modulated = Ac * (1 + k * message) * np.sin(2*np.pi*fc*x)
 
     a = plot_graph(x, message, title="Message",condition="plot",color="red")
     b = plot_graph(x, pulse, title="Pulse",condition="plot",color="green")
     c = plot_graph(x, modulated_wave, title="Modulated wave",condition="plot",color="blue")
-    #d = plot_graph(x, demodulated_wave, title="Demodulated wave",condition="plot",color="blue")
+
 
     return [a,b,c]

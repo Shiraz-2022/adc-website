@@ -1,56 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Network Algorithm simulator</title>
-  <link rel="stylesheet" href="/static/base.css">
-  <link rel="stylesheet" href="/static/AM.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
-    integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
-  <!-- <style>
-    .inputs {
-      display: flex;
-      gap: .5rem;
-      margin: 1rem auto;
-      max-width: 100%;
-      width: 100vw;
-      flex-wrap: wrap;
-      justify-content: space-evenly;
-
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
-  </style> -->
-<!-- </head> -->
-
-<!-- <body class="graph-body">
-  <nav>
-    <h1 class="heading">{{title}}</h1>
-    <div class="buttons-nav">
-      <button class="back-button" style="right: calc(5vw + 45px);">
-        <a href="/PM">
-          <i class="fa-solid fa-arrow-left"></i>
-        </a>
-      </button>
-      <button class="back-button">
-        <a href="/">
-          <i class="fa-solid fa-home"></i>
-        </a>
-      </button>
-    </div>
-  </nav> -->
   {% include 'head.html' %}
   <body class="graph-body">
     {% with title= title %}
@@ -120,17 +71,10 @@
         {% endif %}
 
         {% if pmtype != "QUANTIZATION" and pmtype != "PCM"%}
-        {% if pmtype != "SAMPLING" %}
         <div class="input-wrapper">
           <label for="Signal Frequency">Pulse Frequency</label>
-          <input type="number" id="Signal Frequency" name="fs" class="input-bar" required>
+          <input type="number" id="Signal Frequency" name="fs" min="500" class="input-bar" required>
         </div>
-        {% else %}
-        <div class="input-wrapper">
-          <label for="Signal Frequency">Pulse Frequency</label>
-          <input type="number" id="Signal Frequency" name="fs" min="300" class="input-bar" required>
-        </div>
-        {% endif %}
 
         {% elif pmtype == "QUANTIZATION"%}
         <div class="input-wrapper">
