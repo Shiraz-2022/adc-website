@@ -11,62 +11,47 @@ def round_to_nearest_multiple(number):
         return base * round(number / base)
 #function for ploting amplitude modulation graph
 
+def envelope_detector(modulated_wave):
+    envelope = np.abs(modulated_wave)  # Take the absolute value to extract the envelope
+    return envelope
+
+def low_pass_filter(envelope, cutoff_frequency, sampling_frequency):
+    # Use a simple low-pass filter, such as a moving average, to remove high-frequency components
+    # You can also use more advanced filter designs if needed.
+    window_size = int(sampling_frequency / cutoff_frequency)
+    filter_response = np.ones(window_size) / window_size
+    demodulated_signal = np.convolve(envelope, filter_response, mode='same')
+    return demodulated_signal    
+
 def AM_main_graph(inputs):
     graphs = [] # created an expty array graphs
     Am,Ac,fm,fc,message_signal = inputs.values() #transfered input values to these variables
     condition = "line" # scattered plotting(dots)
 
 
-    #if fm >= 1000:
     fm = round_to_nearest_multiple(fm)
     fc = round_to_nearest_multiple(fc)
-   # elif fm >= 100:
-        #rounded_num = round_to_nearest_multiple(fm, 100)
-    #elif fm >= 10:
-        #rounded_num = round_to_nearest_multiple(fm, 10)
-    #else:
-        #rounded_num = num
-
-        
-    # if(fm<50): 
-    #fm = int(math.ceil(fm / 10.0)) * 10 # converting frequency valuues to multiples pf 10 when its less than 50 for better graph view
-    # if(fc<50):
-    #fc = int(math.ceil(fc / 10.0)) * 10
-    # if(fm>=50): 
-    #     fm = int(math.ceil(fm / 50.0)) * 50 # converting frequency valuues to multiples pf 50 when its greater than 50 for better graph view
-    # if(fc>=50):
-    #     fc = int(math.ceil(fc / 50.0)) * 50
 
     x_carrier = create_domain_AM() #calls craet domain function from util with input fc which creates an np linspace
     x_message = create_domain_AM() #calls craet domain function from util with input fm which creates an np linspace
-    #x_modulated = x_carrier if(len(x_carrier)<len(x_message)) else x_message
     x_modulated = create_domain_AM() #domain for modulated signal is used based on who has the lesser samples
     carrier = Ac*np.cos(2*np.pi*fc*x_carrier)
 
    
     if(message_signal=="sin"): # if message signal is sine
         message = Am*np.sin(2*np.pi*fm*x_message) # generate message signal based on amplitude given
-        # modulated_wave = (Ac+Ac*message)*np.cos(2*np.pi*fc*x_modulated)
-        # demodulated_wave = Ac*message # generate demodulated wave
     elif message_signal=='cos':
         message = Am*np.cos(2*np.pi*fm*x_message)
-        #modulated_wave = (Ac+Ac*message)*np.cos(2*np.pi*fc*x_modulated)
-        #demodulated_wave = Ac*message
     elif message_signal=='tri':
         message = triangular(fm, Am, x_message)
-        #modulated_wave = (Ac+Ac*message)*np.cos(2*np.pi*fc*x_modulated)  
-        #demodulated_wave = Ac*message
- 
 
     modulated_wave = (1 + message / Ac) * carrier
-    #demodulated_wave = Ac*message
     demodulated_wave = modulated_wave * carrier
+    # envelope = envelope_detector(modulated_wave)
+    # demodulated_wave = low_pass_filter(envelope, 2*fm, 2 *fc)
+    demodulated_wave = envelope_detector(demodulated_wave)
 
 
-
-    
-    #add new modulated equation
-    # modulated_wave = carrier+message*np.cos(2*np.pi*fc*x_modulated)
     
         
     a = plot_graph(condition = condition, x = x_message, y = message, title = "Message Signal",color='y') # plot graph using plot graph function in util
@@ -88,14 +73,6 @@ def AM_double_sideband_modulation(inputs):
     
     fm = round_to_nearest_multiple(fm)
     fc = round_to_nearest_multiple(fc)
-    # if(fm<50): 
-    #     fm = int(math.ceil(fm / 10.0)) * 10
-    # if(fc<50):
-    #     fc = int(math.ceil(fc / 10.0)) * 10
-    # if(fm>50): 
-    #     fm = int(math.ceil(fm / 50.0)) * 50
-    # if(fc>50):
-    #     fc = int(math.ceil(fc / 50.0)) * 50
 
     carrier = Ac*np.cos(2*np.pi*fc*x_carrier)
    
@@ -103,16 +80,11 @@ def AM_double_sideband_modulation(inputs):
 
     if message_signal=="sin":
         message = Am*np.sin(2*np.pi*fm*x_message)
-       # modulated_wave = message*Ac*np.cos(2*np.pi*fc*x_modulated)
-        #demodulated_wave = Ac*message
     elif message_signal=='tri':
         message = triangular(fm, Am, x_message)
-        #demodulated_wave = triangular(x, 0.01*Am*Ac)
-       # modulated_wave = message * carrier    # Am*np.cos(2*np.pi*fm*x_message)*Ac*np.cos(2*np.pi*fc*x_modulated)
-    elif message_signal=='cos':
-        #demodulated_wave = Ac**2*Am/2*np.cos(2*np.pi*fm*x_message)    
+    elif message_signal=='cos':   
         message = Am*np.cos(2*np.pi*fm*x_message)
-       # modulated_wave = Am*np.cos(2*np.pi*fm*x_message)*Ac*np.cos(2*np.pi*fc*x_modulated)
+
 
 
     modulated_wave = carrier * message
@@ -139,37 +111,19 @@ def AM_ssb_modulation(inputs):
     fc = round_to_nearest_multiple(fc)
     carrier = Ac*np.cos(2*np.pi*fc*x_carrier)
 
-    # if(fm<50): 
-    #     fm = int(math.ceil(fm / 10.0)) * 10
-    # if(fc<50):
-    #     fc = int(math.ceil(fc / 10.0)) * 10
-    # if(fm>50): 
-    #     fm = int(math.ceil(fm / 50.0)) * 50
-    # if(fc>50):
-    #     fc = int(math.ceil(fc / 50.0)) * 50
 
     if message_signal=="sin":
-        #demodulated_wave = (Am*Ac**2*np.sin(2*np.pi*fm*x_message))/4
         message = Am*np.sin(2*np.pi*fm*x_message)
-        #modulated_positive = 1/2*Am*Ac*(np.sin(2*(fc-fm)*np.pi*x_modulated))
-        #modulated_negative = 1/2*Am*Ac*(np.sin(2*(fc+fm)*np.pi*x_modulated))
     elif message_signal=="cos":
         message = Am*np.cos(2*np.pi*fm*x_message)
-        #demodulated_wave = Am*Ac**2*np.cos(2*np.pi*fm*x_message)/4
-        #modulated_negative = 1/2*Am*Ac*(np.cos(2*(fc-fm)*np.pi*x_modulated))
-        #modulated_positive = 1/2*Am*Ac*(np.cos(2*(fc+fm)*np.pi*x_modulated))
     elif message_signal =="tri":
         message = triangular(fm, Am, x_message)
-        #demodulated_wave = triangular(x_message, 0.01*Am*Ac)
-        #modulated_positive = message*carrier + triangular(x_message, A)
-        #modulated_negative = message*carrier - triangular(x_message, A)
 
     modulated_positive = message * carrier
     modulated_negative = -message * carrier
 
     demodulated_wave = (modulated_positive-modulated_negative)*carrier
 
-    #y2 = (Am*np.cos(2*np.pi*fc*x_message))
     
     a = plot_graph(condition = condition, x = x_message, y = message,color='g', title = "Message Signal")
     b = plot_graph(condition = condition, x = x_carrier, y = carrier,color='m', title = "Carrier Signal")
@@ -185,15 +139,6 @@ def AM_QAM(inputs):
     x_carrier = create_domain_AM()
     x_message = create_domain_AM()
     x_modulated = create_domain_AM() #x_carrier if(len(x_carrier)<len(x_message)) else x_message
-
-    # if(fm<50): 
-    #     fm = int(math.ceil(fm / 10.0)) * 10
-    # if(fc<50):
-    #     fc = int(math.ceil(fc / 10.0)) * 10
-    # if(fm>50): 
-    #     fm = int(math.ceil(fm / 50.0)) * 50
-    # if(fc>50):
-    #     fc = int(math.ceil(fc / 50.0)) * 50
 
     fm = round_to_nearest_multiple(fm)
     fc = round_to_nearest_multiple(fc)
@@ -215,8 +160,6 @@ def AM_QAM(inputs):
     elif message_signal_2 == "tri":
         m1 = triangular(x_message, Am)
 
-    # modulated_wave_1 = (c1 + m1) * np.cos(2 * np.pi * fc * x_modulated)    
-    # modulated_wave_2 = (c2 + m2) * np.sin(2 * np.pi * fc * x_modulated) 
 
     modulated_wave_1 = c1 * m1
     modulated_wave_2 = c2 * m2  

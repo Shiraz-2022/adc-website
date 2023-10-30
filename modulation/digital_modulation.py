@@ -75,7 +75,7 @@ def BASK(Tb, fc,Ac1,Ac2, inputBinarySeq):
     plt.grid(True)
     plt.axis([0, Tb * N, -1, 2])
     plt.ylabel("Amplitude (V)")
-    plt.xlabel("Time (s)")
+    plt.xlabel("Time (ms)")
     plt.title("Message signal")
     plt.grid(True)
 
@@ -101,7 +101,7 @@ def BASK(Tb, fc,Ac1,Ac2, inputBinarySeq):
         plt.axis([0, Tb * N, -Ac2 - 5, Ac2 + 5])  
     plt.plot(t3, message, "r")
     plt.grid(True)
-    plt.xlabel("Time (s)")
+    plt.xlabel("Time (ms)")
     plt.ylabel("Amplitude (V)")
     plt.title("Modulated Wave")
     plt.grid(True)
@@ -248,7 +248,7 @@ def BPSK(Tb,Ac, fc, inputBinarySeq):
     plt.figure()
 
     # Binary-PSK modulation
-    # A = np.sqrt(2 / Tb)  # Amplitude of carrier signal
+
     br = 1 / bp  # bit rate
     f = br * 2  # carrier frequency
 
@@ -270,19 +270,6 @@ def BPSK(Tb,Ac, fc, inputBinarySeq):
 
     carrier = plot_graph(condition = condition, x = x_carrier, y = c, title = "Carrier Signal",color='g')
 
-    # Plotting the carrier signal
-    # plt.subplot(5, 1, 3)
-    # plt.plot(t2, y)
-    # plt.title("carrier signal")
-    # plt.xlabel("t")
-    # plt.ylabel("c(t)")
-    # plt.grid(True)
-    # # Save
-    # data = BytesIO()
-    # plt.savefig(data, format="png", bbox_inches="tight")
-    # data.seek(0)
-    # carrier = data.getvalue().hex()
-    # plt.figure()
 
     # Modulated
     t3 = np.arange(bp / 99, bp * len(x) + bp / 99, bp / space)
@@ -306,10 +293,8 @@ def BPSK(Tb,Ac, fc, inputBinarySeq):
 # ------- QPSK ---------------
 def QPSK(Tb,Ac, fc, inputBinarySeq):
 
-    # x = np.array([1, 0, 0, 1, 1, 0, 1])  # Binary Information
     x = inputBinarySeq.reshape(-1, 1)
     condition = 'line'
-    # bp = 0.000001  # bit period
     bp = Tb
     fc = round_to_nearest_multiple(fc)
     # Transmitting binary information as digital signal
@@ -337,8 +322,6 @@ def QPSK(Tb,Ac, fc, inputBinarySeq):
     msgSignal = data.getvalue().hex()
     plt.figure()
 
-    # Binary-PSK modulation
-    # A = np.sqrt(2 / Tb)  # Amplitude of carrier signal
     br = 1 / bp  # bit rate
     f = br * 2  # carrier frequency
 
@@ -348,12 +331,7 @@ def QPSK(Tb,Ac, fc, inputBinarySeq):
     t2 = np.arange(bp / 99, bp + bp / 99, bp / space)
     ss = len(t2)
     s = np.array([])
-    # for i in range(len(x)):
-    #     if x[i] == 1:
-    #         y = Ac * np.cos(2 * np.pi * fc * f * t2)
-    #     else:
-    #         y = Ac * np.cos(2 * np.pi * fc * f * t2 + np.pi)
-    #     m = np.concatenate([m, y])
+
     for i in range(0,len(x), 2):
         if x[i] == 0 and x[i+1] == 0:
             y = Ac * np.cos(2 * np.pi * fc * t2 + np.pi/4)
@@ -371,19 +349,6 @@ def QPSK(Tb,Ac, fc, inputBinarySeq):
 
     carrier = plot_graph(condition = condition, x = x_carrier, y = c, title = "Carrier Signal",color='g')
 
-    # Plotting the carrier signal
-    # plt.subplot(5, 1, 3)
-    # plt.plot(t2, y)
-    # plt.title("carrier signal")
-    # plt.xlabel("t")
-    # plt.ylabel("c(t)")
-    # plt.grid(True)
-    # # Save
-    # data = BytesIO()
-    # plt.savefig(data, format="png", bbox_inches="tight")
-    # data.seek(0)
-    # carrier = data.getvalue().hex()
-    # plt.figure()
 
     # Modulated
     t3 = np.arange(bp / 99, bp * len(x) + bp / 99, bp / space)
@@ -406,10 +371,8 @@ def QPSK(Tb,Ac, fc, inputBinarySeq):
 # -------DPSK ----------
 def DPSK(Tb,Ac, fc, inputBinarySeq):
 
-    # x = np.array([1, 0, 0, 1, 1, 0, 1])  # Binary Information
     x = inputBinarySeq.reshape(-1, 1)
     condition = 'line'
-    # bp = 0.000001  # bit period
     bp = Tb
     fc = round_to_nearest_multiple(fc)
     # Transmitting binary information as digital signal
@@ -437,8 +400,6 @@ def DPSK(Tb,Ac, fc, inputBinarySeq):
     msgSignal = data.getvalue().hex()
     plt.figure()
 
-    # Binary-PSK modulation
-    # A = np.sqrt(2 / Tb)  # Amplitude of carrier signal
     br = 1 / bp  # bit rate
     f = br * 2  # carrier frequency
 

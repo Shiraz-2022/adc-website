@@ -43,19 +43,19 @@
       </div>  
       <div class="input-wrapper">
         <label for="freqm">Message Frequency</label>
-          <input required type="number" id="freqm" min="1000" max="50000" name="fm" placeholder="Fm">
+          <input required type="number" id="freqm" min="1000" max="50000" name="fm" placeholder="in HZ">
       </div>
       <div class="input-wrapper">
           <label for="am">Message Amplitutde</label>
-          <input required type="number" id="am" name="Am" min="3" placeholder="Am">
+          <input required type="number" id="am" name="Am" min="3" placeholder="">
       </div>
       <div class="input-wrapper">
         <label for="freqc">Carrier frequency</label>
-        <input required type="number" id="freqc" min="10000" max="50000" name="fc" class="input-bar" placeholder="Fc">
+        <input required type="number" id="freqc" min="1000" max="50000" name="fc" class="input-bar" placeholder="in HZ">
     </div>
       <div class="input-wrapper">
         <label for="am">Carrier Amplitude</label>
-        <input required type="number" id="am" min="4" name="Ac" placeholder="Ac">
+        <input required type="number" id="am" min="4" name="Ac" placeholder="">
     </div>
       {% if index == 1 %}
       <div class="input-wrapper">
@@ -73,7 +73,6 @@
     </div>
     <div class="buttons">
       <button type="submit" id="submit-button">show results</button>
-      <!-- <button type="submit" id="Download-button">Download</button> -->
       <button id="downloadGroup">Download</button>
     </div>
   </form>
@@ -97,6 +96,7 @@
   {%endif%}
   {%if errMsg%}
      <span style="background-color: brown;width:100%;padding:10px;display: inline-block;text-align: center;color: white;">{{errMsg}}</span>
+     {% set photoLinks = [] %}
   {% else %}
   {% if plots | length == 0%}
   {% set photoLinks = [] %}

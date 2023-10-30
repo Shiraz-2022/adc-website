@@ -7,7 +7,7 @@ def triangular(f,A,x):
     return A * np.abs((2 * x * f) % 2 - 1)
     
 
-def plot_graph(x,y,title,xlabel="Frequency",ylabel="Volts",color="b",condition="line",text=""): # changed to line from scattter
+def plot_graph(x,y,title,xlabel="Time",ylabel="Amplitude",color="b",condition="line",text=""): # changed to line from scattter
     x_smooth = np.linspace(x.min(), x.max(), 1000)
     y_smooth = np.interp(x_smooth, x, y) # interpolates the points
 
@@ -24,9 +24,6 @@ def plot_graph(x,y,title,xlabel="Frequency",ylabel="Volts",color="b",condition="
     if text!="":
         plt.text(-210, 5, text, fontsize=14, ha='center', va='center',rotation=90)
 
-    # if(condition=="scatter"):
-    #     plt.scatter(x,y,c=color,s=s)        
-    # else: 
     plt.plot(x_smooth,y_smooth,c=color)
     fig.tight_layout() # adjust layout of figure
 
@@ -47,13 +44,7 @@ def plot_axis(fig,ax):
     ax.yaxis.set_ticks_position('left')
 
 def create_domain_AM():
-    x= np.linspace(-1000,1000,1000000) # creates an array of points between -200 and 200 with 10000 points in between
-    # if frequency>=50 and frequency<=2000:
-    #     x = np.linspace(-500,500,1000000) 
-    # elif frequency<50:
-    #     x = np.linspace(-500,500,1000000)
-    # elif frequency>2000:
-    #     x = np.linspace(-200,200,1200000)
+    x= np.linspace(-1/1000,1/1000,1000000) # creates an array of points between -200 and 200 with 10000 points in between
     return x
 
 def destructure_dict(d, *keys):

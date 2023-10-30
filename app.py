@@ -86,16 +86,17 @@ def Amplitutde_Modulation(am_type):
     plots = [] # This is an empty list that will hold the generated plots for the AM scenario
     x_message = [] # for holding message signal data for plotting
     x_carrier = [] # for holding carrier signal data for plotting
+    errMsg = "" # initializes error message
     if (request.method=='POST'): # if the method is post
         content = request.form  # the form contents are stored in content
         fm=int(content['fm'])
         fc=int(content['fc'])
         Am=int(content['Am'])     # all the contents are stored in seperate variables
         Ac=int(content['Ac'])
-        errMsg = "" # initializes error message
         message_signal = str(content['message_signal']) # stores message_signale with the message_signal string passed in the form content
         if(Am>Ac or fm>fc): # conditions which are not possible
-            errMsg = "The given plot is not possible. Because Fc <Fm or Ac<Am"
+            errMsg = "Given graph is Not possible as Fc <Fm or Ac<Am."
+
         inputs = {"Am":Am,"Ac":Ac,"fm":fm,"fc":fc,"message_signal":message_signal} # stores the inputs in seperate variables inside the 'inputs'
         
         if am_type == "MAIN":
@@ -108,8 +109,8 @@ def Amplitutde_Modulation(am_type):
             message_signal_2 = request.form['message_signal_2']
             inputs["message_signal_2"] = message_signal_2
             plots = AM_QAM(inputs) 
-        return render_template('AM_graphs.html',am_type=am_type.upper(),title=title[am_type],plots = plots,inputs=inputs,errMsg=errMsg)
-    return render_template('AM_graphs.html',am_type=am_type.upper(),title=title[am_type],plots = plots)
+        # return render_template('AM_graphs.html',am_type=am_type.upper(),title=title[am_type],plots = plots,inputs=inputs,errMsg=errMsg)
+    return render_template('AM_graphs.html',am_type=am_type.upper(),title=title[am_type],plots = plots,errMsg=errMsg)
 
 @app.route('/FM/<index>',methods=['GET','POST']) # this is the get and post method for fm type
 def FM(index):
@@ -301,7 +302,7 @@ def PulseModulation(pmtype):
           inputs.append(int(request.form['fs']))
           plots = SAMPLING(inputs)
         elif pmtype.upper() == 'QUANTIZATION':
-          #inputs.append(int(request.form['fs']))
+          inputs.append(int(request.form['ql']))
           plots = QUANTIZATION(inputs)
 
         # elif pmtype.upper() == 'BPSK':

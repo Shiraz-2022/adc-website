@@ -14,45 +14,45 @@
       {% if dmtype == 'BFSK' %}
       <div class="input-wrapper">
         <label for="ampc">Carrier Amplitude</label>
-        <input type="number" id="ampc" name="Ac" min="1" class="input-bar" placeholder="amplitude" required>
+        <input type="number" id="ampc" name="Ac" min="1" class="input-bar" placeholder="" required>
     </div>
       <div class="input-wrapper">
         <label for="freqc">Carrier1 Frequency</label>
-        <input type="number" id="freqc" name="fc1" class="input-bar" min="1000" max="50000" placeholder="frequency" required>
+        <input type="number" id="freqc" name="fc1" class="input-bar" min="1000" max="50000" placeholder="in HZ" required>
     </div>
         <div class="input-wrapper">
           <label for="freqc">Carrier2 Frequency</label>
-          <input type="number" id="freqc" name="fc2" class="input-bar" min="1000" max="50000" placeholder="frequency" required>
+          <input type="number" id="freqc" name="fc2" class="input-bar" min="1000" max="50000" placeholder="in HZ" required>
         </div>
         {% elif dmtype == 'BASK' %}
         <div class="input-wrapper">
           <label for="freqc">Carrier Frequency</label>
-          <input type="number" id="freqc" name="fc" class="input-bar" min="1000" max="50000" placeholder="frequency" required>
+          <input type="number" id="freqc" name="fc" class="input-bar" min="1000" max="50000" placeholder="in HZ" required>
       </div>
         <div class="input-wrapper">
           <label for="ampc">Carrier1 Amplitude</label>
-          <input type="number" id="ampc" name="Ac1" min="1" class="input-bar"  placeholder="amplitude" required>
+          <input type="number" id="ampc" name="Ac1" min="1" class="input-bar"  placeholder="" required>
       </div>
           <div class="input-wrapper">
             <label for="ampc">Carrier2 Amplitude</label>
-            <input type="number" id="ampc" name="Ac2" min="1" class="input-bar" placeholder="amplitude" required>
+            <input type="number" id="ampc" name="Ac2" min="1" class="input-bar" placeholder="" required>
           </div>
 
       {% else %}
       <div class="input-wrapper">
         <label for="ampc">Carrier Amplitude</label>
-        <input type="number" id="ampc" name="Ac" min="1" class="input-bar" placeholder="amplitude" required>
+        <input type="number" id="ampc" name="Ac" min="1" class="input-bar" placeholder="" required>
     </div>
       <div class="input-wrapper">
           <label for="freqc">Carrier Frequency</label>
-          <input type="number" id="freqc" name="fc" class="input-bar" min="1000" max="50000" placeholder="frequency" required>
+          <input type="number" id="freqc" name="fc" class="input-bar" min="1000" max="50000" placeholder="in HZ" required>
       </div>
       {% endif %}
 
 
       <div class="input-wrapper">
         <label for="freqm">Bit Duration</label>
-        <input type="number" id="freqm" min="1" name="Tb" placeholder="eg: 1" required>
+        <input type="number" id="freqm" min="1" name="Tb" placeholder="in ms" required>
       </div>
       <div class="input-wrapper">
           <label for="am">Input Binary Sequence</label>
@@ -64,7 +64,6 @@
 
     <div class="buttons">
       <button id="submit-button">Show Resutls</button>
-      <!-- <button type="submit" id="Download-button">Download</button> -->
       <button id="downloadGroup">Download</button>
     </div>
   </form>
