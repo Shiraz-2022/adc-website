@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+from scipy import signal
 from .util import *
 
 
@@ -9,20 +10,9 @@ def round_to_nearest_multiple(number):
         length = len(str(number))
         base = 10 ** (length - 1)
         return base * round(number / base)
+
+
 #function for ploting amplitude modulation graph
-
-def envelope_detector(modulated_wave):
-    envelope = np.abs(modulated_wave)  # Take the absolute value to extract the envelope
-    return envelope
-
-def low_pass_filter(envelope, cutoff_frequency, sampling_frequency):
-    # Use a simple low-pass filter, such as a moving average, to remove high-frequency components
-    # You can also use more advanced filter designs if needed.
-    window_size = int(sampling_frequency / cutoff_frequency)
-    filter_response = np.ones(window_size) / window_size
-    demodulated_signal = np.convolve(envelope, filter_response, mode='same')
-    return demodulated_signal    
-
 def AM_main_graph(inputs):
     graphs = [] # created an expty array graphs
     Am,Ac,fm,fc,message_signal = inputs.values() #transfered input values to these variables
@@ -46,12 +36,14 @@ def AM_main_graph(inputs):
         message = triangular(fm, Am, x_message)
 
     modulated_wave = (1 + message / Ac) * carrier
-    demodulated_wave = modulated_wave * carrier
+    # demodulated_wave = modulated_wave * carrier
+    # demodulated_wave = (1/2+message/(Ac*2))
     # envelope = envelope_detector(modulated_wave)
-    # demodulated_wave = low_pass_filter(envelope, 2*fm, 2 *fc)
-    demodulated_wave = envelope_detector(demodulated_wave)
-
-
+    envelope = np.abs(modulated_wave)
+    b, a = signal.butter(5, 0.1, "low")
+    demodulated_wave = signal.filtfilt(b, a, envelope)
+    # demodulated_wave = low_pass_filter(envelope, 2*fm, 2 *fc
+    # demodulated_wave = low_pass_filter(envelope, 2*fm, 100000*fc)
     
         
     a = plot_graph(condition = condition, x = x_message, y = message, title = "Message Signal",color='y') # plot graph using plot graph function in util

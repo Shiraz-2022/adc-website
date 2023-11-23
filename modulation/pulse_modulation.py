@@ -508,7 +508,7 @@ def PPM(inputs):
 
     [fm, Am, message_type, fs,ppm_ratio] = inputs
     fm = round_to_nearest_multiple(fm)
-    x = np.linspace(-500, 500, 1000000)
+    x = np.linspace(-1/500, 1/500, 1000000)
 
     sampling_rate = 1000000
     duration = 1
@@ -543,7 +543,7 @@ def PCM(inputs):
 
     duration = 1
     #x = np.linspace(0, duration, int(duration * samples_per_sec))
-    x = np.linspace(-500, 500, 1000)
+    x = np.linspace(-1/500, 1/500, 1000)
     #carrier = 5*np.sin(2 * np.pi * 3000 * x)
 
     if message_type == "sin":
@@ -606,7 +606,7 @@ def PWM(inputs):
     [fm,Am,message_type,fs] = inputs
     fm = round_to_nearest_multiple(fm)
     #N  = 1000
-    x = np.linspace(-500, 500, 1000000)
+    x = np.linspace(-1/500, 1/500, 1000000)
 
     fm = round_to_nearest_multiple(fm)
     fs = round_to_nearest_multiple(fs)
@@ -643,11 +643,13 @@ def PWM(inputs):
 
     return [a,b,c]
 
+
+
 def PAM(inputs):
-    #[Am,Ac,fm,fc,message_type,fs] = inputs
-    [fm,Am,message_type,fs] = inputs
-    #N  = 1000
-    x = np.linspace(-500, 500, 1000000)
+    # [Am,Ac,fm,fc,message_type,fs] = inputs
+    [fm, Am, message_type, fs] = inputs
+    # N  = 1000
+    x = np.linspace(-1/500, 1/500, 1000000)
 
     fm = round_to_nearest_multiple(fm)
     fs = round_to_nearest_multiple(fs)
@@ -657,35 +659,52 @@ def PAM(inputs):
     duration = 1.0  # Duration of the signal in seconds
     sampling_rate = 1000000  # Sampling rate in Hz
 
-
     if fs <= 40000:
         t = np.linspace(-10, 10, 1000000)
     else:
         t = np.linspace(-1, 1, 1000000)
 
-    pulse = 1+signal.square(2 * np.pi * fs * t)
+    pulse = 1 + signal.square(2 * np.pi * fs * t)
 
     if message_type == "sin":
-        message = Am*np.sin(2 * np.pi * fm * x)
+        message = Am * np.sin(2 * np.pi * fm * x)
     elif message_type == "cos":
-        message = Am*np.cos(2 * np.pi * fm * x)
-    elif message_signal=='tri':
+        message = Am * np.cos(2 * np.pi * fm * x)
+    elif message_signal == "tri":
         message = triangular(fm, Am, x_message)
 
     modulated_wave = message * pulse
+    envelope = np.abs(modulated_wave)
+    cutoff_frequency = 2 * (fm / fs)
+    print(cutoff_frequency)
+    b, a = signal.butter(5, 0.2, "low")
+    demodulated_wave = signal.filtfilt(b, a, envelope)
+
+    a = plot_graph(x, message, title="Message", condition="plot", color="red")
+    b = plot_graph(x, pulse, title="Pulse", condition="plot", color="green")
+    c = plot_graph(
+        x,
+        modulated_wave,
+        title="Natural Pulse Modulated wave",
+        condition="plot",
+        color="blue",
+    )
+    d = plot_graph(
+        x,
+        demodulated_wave,
+        title="Demodulated Wave (Envelope Detection)",
+        condition="plot",
+        color="purple",
+    )
+
+    return [a, b, c, d]
 
 
-    a = plot_graph(x, message, title="Message",condition="plot",color="red")
-    b = plot_graph(x, pulse, title="Pulse",condition="plot",color="green")
-    c = plot_graph(x, modulated_wave, title="Modulated wave",condition="plot",color="blue")
-
-
-    return [a,b,c]
 
 def QUANTIZATION(inputs):
     [fm,Am,message_type,ql] = inputs
     #N  = 1000
-    x = np.linspace(-500, 500, 1000000)
+    x = np.linspace(-1/500, 1/500, 1000000) #t
     fm = round_to_nearest_multiple(fm)
 
 
@@ -693,7 +712,7 @@ def QUANTIZATION(inputs):
     num_quantization_levels = ql  # Number of quantization levels
 
     # Generate a continuous message signal
-    message_signal = np.sin(2 * np.pi * fm * x)  # Example message signal
+    message_signal = np.sin(2 * np.pi * fm * x)  # Example message signal analog signal
 
     # Calculate the step size between quantization levels
     step_size = (amplitude_range[1] - amplitude_range[0]) / (num_quantization_levels - 1)
@@ -708,17 +727,23 @@ def QUANTIZATION(inputs):
 
     # Quantize the message signal
     quantized_wave = np.round((message - amplitude_range[0]) / step_size) * step_size + amplitude_range[0]
-
-
+    
+    #Demodulation
+    reconstructed_message = np.zeros_like(quantized_wave)
+    previous_sample = 0
+    for i in range(len(quantized_wave)):
+        reconstructed_message[i] = quantized_wave[i] + previous_sample
+        previous_sample = reconstructed_message[i]
+    
     a = plot_graph(x, message, title="Message",condition="plot",color="red")
     b = plot_graph(x, quantized_wave, title="Quantized wave",condition="plot",color="blue")
+    c = plot_graph(x, reconstructed_message, title="Demodulated Wave",condition="plot",color="blue")
 
-    return [a,b]
-
+    return [a,b,c]
 
 def SAMPLING(inputs):
     [fm,Am,message_type,fs] = inputs
-    x = np.linspace(-500, 500, 1000000)
+    x = np.linspace(-1/500, 1/500, 1000000)
 
     fm = round_to_nearest_multiple(fm)
     fs = round_to_nearest_multiple(fs)
@@ -730,7 +755,7 @@ def SAMPLING(inputs):
 
 
     if fs <= 40000:
-        t = np.linspace(-10, 10, 1000000)
+        t = np.linspace(-1/10, 1/10, 1000000)
     else:
         t = np.linspace(-1, 1, 1000000)
 
