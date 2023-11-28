@@ -681,15 +681,14 @@ def PAM(inputs):
         message = Am * np.sin(2 * np.pi * fm * x)
     elif message_type == "cos":
         message = Am * np.cos(2 * np.pi * fm * x)
-    elif message_signal == "tri":
-        message = triangular(fm, Am, x_message)
+    elif message_type == "tri":
+        message = triangular(fm, Am, x)
 
     modulated_wave = message * pulse
-    envelope = np.abs(modulated_wave)
-    cutoff_frequency = 2 * (fm / fs)
-    print(cutoff_frequency)
-    b, a = signal.butter(5, 0.2, "low")
-    demodulated_wave = signal.filtfilt(b, a, envelope)
+    carrier = np.cos(2 * np.pi * fm * x)
+    demodulated_wave = modulated_wave * carrier
+
+    # Apply a low-pass filter
 
     a = plot_graph(x, message, title="Message", condition="plot", color="red")
     b = plot_graph(x, pulse, title="Pulse", condition="plot", color="green")
@@ -702,7 +701,7 @@ def PAM(inputs):
     )
     d = plot_graph(
         x,
-        message,
+        demodulated_wave,
         title="Demodulated Wave (Envelope Detection)",
         condition="plot",
         color="purple",
