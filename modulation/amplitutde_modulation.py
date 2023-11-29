@@ -99,21 +99,32 @@ def AM_ssb_modulation(inputs):
     
     fm = round_to_nearest_multiple(fm)
     fc = round_to_nearest_multiple(fc)
-    carrier = Ac*np.cos(2*np.pi*fc*x_carrier)
-
 
     if message_signal=="sin":
+        carrier = Ac*np.sin(2*np.pi*fc*x_carrier)
         message = Am*np.sin(2*np.pi*fm*x_message)
     elif message_signal=="cos":
+        carrier = Ac*np.cos(2*np.pi*fc*x_carrier)
         message = Am*np.cos(2*np.pi*fm*x_message)
     elif message_signal =="tri":
-        message = triangular(fm, Am, x_message)
+        carrier = triangular(fc, Ac, x_carrier)
+        message = triangular(fm, Am, x_message) 
 
-    modulated_positive = message * carrier
-    modulated_negative = -message * carrier
+    if message_signal=="sin":
+        message0 = Ac*Am*np.sin(2*np.pi*(fc+fm)*x_message)
+        message1 = Ac*Am*np.sin(2*np.pi*(fc-fm)*x_message)
+    elif message_signal=="cos":
+        message0 = Ac*Am*np.cos(2*np.pi*(fc+fm)*x_message)
+        message1 = Ac*Am*np.cos(2*np.pi*(fc-fm)*x_message)
+    elif message_signal =="tri":
+        message0 = triangular(fc+fm, Ac*Am, x_message)
+        message1 = triangular(fc-fm, Ac*Am, x_message)        
 
-    demodulated_wave = (modulated_positive-modulated_negative)*carrier
-
+    modulated_positive = message0 
+    modulated_negative = message1 
+    
+    coherent_carrier = Ac * np.cos(2 * np.pi * fc * x_message)
+    demodulated_wave = np.multiply(message0, coherent_carrier)
     
     a = plot_graph(condition = condition, x = x_message, y = message,color='g', title = "Message Signal")
     b = plot_graph(condition = condition, x = x_carrier, y = carrier,color='m', title = "Carrier Signal")
@@ -121,7 +132,7 @@ def AM_ssb_modulation(inputs):
     d = plot_graph(condition = condition, x = x_modulated, y = modulated_negative, color='b', title = "Modulated wave 2",text="lower Sideband")
     e = plot_graph(condition = condition, x = x_message, y=demodulated_wave,color='r', title="demodulated wave")
     
-    return [a,b,c,d,e]
+    return [a,b,c,d]
 
 def AM_QAM(inputs):
     Am,Ac,fm,fc,message_signal,message_signal_2 = inputs.values()

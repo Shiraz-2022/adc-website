@@ -729,18 +729,23 @@ def QUANTIZATION(inputs):
 
     # Normalize the reconstructed message to the original amplitude
     reconstructed_message = Am * (reconstructed_message / np.max(np.abs(reconstructed_message)))
+    phase_shift = np.pi / 2  # Shift by pi/4 radians
+
+    # Apply phase shift to the reconstructed signal (assuming it's a sinusoidal signal)
+    reconstructed_message_shifted = reconstructed_message * np.exp(1j * phase_shift)
 
 
     a = plot_graph(x, message, title="Message",condition="plot",color="red")
     b = plot_graph(x, quantized_wave, title="Quantized wave",condition="plot",color="blue")
-    c = plot_graph(x, reconstructed_message, title="Demodulated Wave",condition="plot",color="blue")
+    c = plot_graph(x, reconstructed_message_shifted, title="Demodulated Wave",condition="plot",color="blue")
 
     return [a,b,c]
 
 def SAMPLING(inputs):
     [fm,Am,message_type,fs] = inputs
     x = np.linspace(-1/500, 1/500, 1000000)
-
+    if fs>=4600 and fs<=5400:
+        fs=5500
     fm = round_to_nearest_multiple(fm)
     fs = round_to_nearest_multiple(fs)
 
