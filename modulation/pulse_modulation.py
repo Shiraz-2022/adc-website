@@ -644,12 +644,11 @@ def PWM(inputs):
     return [a,b,c]
 
 
-
 def PAM(inputs):
     # [Am,Ac,fm,fc,message_type,fs] = inputs
     [fm, Am, message_type, fs] = inputs
     # N  = 1000
-    x = np.linspace(-1/500, 1/500, 1000000)
+    x = np.linspace(-500, 500, 1000000)
 
     fm = round_to_nearest_multiple(fm)
     fs = round_to_nearest_multiple(fs)
@@ -674,11 +673,8 @@ def PAM(inputs):
         message = triangular(fm, Am, x_message)
 
     modulated_wave = message * pulse
-    envelope = np.abs(modulated_wave)
-    cutoff_frequency = 2 * (fm / fs)
-    print(cutoff_frequency)
-    b, a = signal.butter(5, 0.2, "low")
-    demodulated_wave = signal.filtfilt(b, a, envelope)
+    b, a = signal.butter(10, 0.05, "low")
+    demodulated_wave = signal.filtfilt(b, a,modulated_wave)
 
     a = plot_graph(x, message, title="Message", condition="plot", color="red")
     b = plot_graph(x, pulse, title="Pulse", condition="plot", color="green")
@@ -691,7 +687,7 @@ def PAM(inputs):
     )
     d = plot_graph(
         x,
-        demodulated_wave,
+        demodulated_wave ,
         title="Demodulated Wave (Envelope Detection)",
         condition="plot",
         color="purple",
@@ -704,37 +700,37 @@ def PAM(inputs):
 def QUANTIZATION(inputs):
     [fm,Am,message_type,ql] = inputs
     #N  = 1000
-    x = np.linspace(-1/500, 1/500, 1000000) #t
+    x = np.linspace(-1/500, 1/500, 1000000)
     fm = round_to_nearest_multiple(fm)
 
 
     amplitude_range = (-Am, Am)  # Range of the amplitude values
     num_quantization_levels = ql  # Number of quantization levels
+    x_message = create_domain_AM()
 
     # Generate a continuous message signal
-    message_signal = np.sin(2 * np.pi * fm * x)  # Example message signal analog signal
+    message_signal = np.sin(2 * np.pi * fm * x)  # Example message signal
 
     # Calculate the step size between quantization levels
     step_size = (amplitude_range[1] - amplitude_range[0]) / (num_quantization_levels - 1)
 
 
     if message_type == "sin":
-        message = Am*np.sin(2 * np.pi * fm * x)
+        message = Am*np.sin(2 * np.pi * fm * x_message)
     elif message_type == "cos":
-        message = Am*np.cos(2 * np.pi * fm * x)
+        message = Am*np.cos(2 * np.pi * fm * x_message)
     elif message_type== "tri":
-        message = triangular(fm, Am, x)    
+        message = triangular(fm, Am, x_message)    
 
     # Quantize the message signal
     quantized_wave = np.round((message - amplitude_range[0]) / step_size) * step_size + amplitude_range[0]
-    
-    #Demodulation
-    reconstructed_message = np.zeros_like(quantized_wave)
-    previous_sample = 0
-    for i in range(len(quantized_wave)):
-        reconstructed_message[i] = quantized_wave[i] + previous_sample
-        previous_sample = reconstructed_message[i]
-    
+    #Demodulation by cumulative summation with manual initial condition
+    reconstructed_message = np.cumsum(quantized_wave-np.mean(quantized_wave))
+
+    # Normalize the reconstructed message to the original amplitude
+    reconstructed_message = Am * (reconstructed_message / np.max(np.abs(reconstructed_message)))
+
+
     a = plot_graph(x, message, title="Message",condition="plot",color="red")
     b = plot_graph(x, quantized_wave, title="Quantized wave",condition="plot",color="blue")
     c = plot_graph(x, reconstructed_message, title="Demodulated Wave",condition="plot",color="blue")

@@ -36,22 +36,20 @@ def AM_main_graph(inputs):
         message = triangular(fm, Am, x_message)
 
     modulated_wave = (1 + message / Ac) * carrier
-    # demodulated_wave = modulated_wave * carrier
-    # demodulated_wave = (1/2+message/(Ac*2))
-    # envelope = envelope_detector(modulated_wave)
     envelope = np.abs(modulated_wave)
-    b, a = signal.butter(5, 0.1, "low")
+    b, a = signal.butter(10, 0.1, "low")
     demodulated_wave = signal.filtfilt(b, a, envelope)
-    # demodulated_wave = low_pass_filter(envelope, 2*fm, 2 *fc
-    # demodulated_wave = low_pass_filter(envelope, 2*fm, 100000*fc)
+
+ 
+
     
         
     a = plot_graph(condition = condition, x = x_message, y = message, title = "Message Signal",color='y') # plot graph using plot graph function in util
     b = plot_graph(condition = condition, x = x_carrier, y = carrier, title = "Carrier Signal",color='g')
-    c = plot_graph(condition = condition, x = x_modulated, y = modulated_wave, title = "Modulated wave",color='r')
-    d = plot_graph(condition = condition, x = x_message, y = demodulated_wave, title="demodulated wave")
+    c = plot_graph(condition = condition, x = x_modulated, y = modulated_wave, title = "Modulated Signal",color='r')
+    # d = plot_graph(condition = condition, x = x_message, y = demodulated_wave, title="demodulated wave")
 
-    return [a,b,c,d]
+    return [a,b,c]
 
 
 def AM_double_sideband_modulation(inputs):
