@@ -153,77 +153,66 @@ def DM_page():
 
 @app.route('/DM/<dmtype>', methods=['GET','POST'])  # get and post for dm
 def DigitalModulation(dmtype):
+    errMsg=''
     title = {"BPSK":"BPSK Modulation","BFSK":"BFSK Modulation","BASK":"BASK Modulation","QPSK":"QPSK Modulation","DPSK":"DPSK Modulation"}
     plots = []
     inputs = {}
 
     if (request.method=='POST'):
-      Tb=float (request.form['Tb'])
+        try:
+            Tb=float (request.form['Tb'])
 
-      if(dmtype=='BFSK'):
-          Ac=int (request.form['Ac'])
-          fc1=int (request.form['fc1'])
-          fc2=int (request.form['fc2'])
-          inputs['fc1'] = fc1
-          inputs['fc2'] = fc2
-          inputs['Ac'] = Ac
+            if(dmtype=='BFSK'):
+                Ac=int (request.form['Ac'])
+                fc1=int (request.form['fc1'])
+                fc2=int (request.form['fc2'])
+                inputs['fc1'] = fc1
+                inputs['fc2'] = fc2
+                inputs['Ac'] = Ac
 
-      elif(dmtype=='BASK'):
-          fc=int (request.form['fc'])
-          Ac1=int (request.form['Ac1'])
-          Ac2=int (request.form['Ac2'])
-          inputs['Ac1'] = Ac1
-          inputs['Ac2'] = Ac2
-          inputs['fc'] = fc
+            elif(dmtype=='BASK'):
+                fc=int (request.form['fc'])
+                Ac1=int (request.form['Ac1'])
+                Ac2=int (request.form['Ac2'])
+                inputs['Ac1'] = Ac1
+                inputs['Ac2'] = Ac2
+                inputs['fc'] = fc
 
-      else:    
-          fc=int (request.form['fc'])
-          Ac=int (request.form['Ac'])
-          inputs['fc'] = fc
-          inputs['Ac'] = Ac
-
-
-      binaryInput = str(request.form['inputBinarySeq'])
-      inputs = {"Tb":Tb,"binaryInput":binaryInput}
-      #   fc2=1
+            else:    
+                fc=int (request.form['fc'])
+                Ac=int (request.form['Ac'])
+                inputs['fc'] = fc
+                inputs['Ac'] = Ac
 
 
-      # Change Binary string to array
-      inputBinarySeq = np.array(list(binaryInput), dtype=int) # converts binary input into array
+            binaryInput = str(request.form['inputBinarySeq'])
+            inputs = {"Tb":Tb,"binaryInput":binaryInput}
+            #   fc2=1
 
 
-      if dmtype.upper() == 'BASK':
-          plots = BASK(Tb, fc,Ac1,Ac2, inputBinarySeq)
-      elif dmtype.upper() == 'BFSK':
-          plots = BFSK(Tb,Ac, fc1, fc2, inputBinarySeq)
+            # Change Binary string to array
+            inputBinarySeq = np.array(list(binaryInput), dtype=int) # converts binary input into array
 
-      elif dmtype.upper() == 'BPSK':
-          plots = BPSK(Tb,Ac, fc, inputBinarySeq)
 
-      elif dmtype.upper() == 'QPSK':
-          plots = QPSK(Tb,Ac, fc, inputBinarySeq)
+            if dmtype.upper() == 'BASK':
+                plots = BASK(Tb, fc,Ac1,Ac2, inputBinarySeq)
+            elif dmtype.upper() == 'BFSK':
+                plots = BFSK(Tb,Ac, fc1, fc2, inputBinarySeq)
 
-      elif dmtype.upper() == 'DPSK':
-          plots = DPSK(Tb,Ac, fc, inputBinarySeq)      
+            elif dmtype.upper() == 'BPSK':
+                plots = BPSK(Tb,Ac, fc, inputBinarySeq)
 
-    return render_template('DM_graphs.html',dmtype=dmtype.upper(),title=title[dmtype], plots=plots,inputs=inputs)
+            elif dmtype.upper() == 'QPSK':
+                plots = QPSK(Tb,Ac, fc, inputBinarySeq)
 
-# @app.route('/DM2/<dmtype>', methods=['GET','POST'])   # get and post for gmsk
-# def GMSK_Modulation(dmtype):
-#     title = {"GMSK":"GMSK Modulation"}
-#     plots = []
-#     inputs = {}
-#     if (request.method=='POST'):
-#         a= str (request.form['data_stream'])
-#         fc= int (request.form['fc'])
-#         osmp_factor= int (request.form['osmp_factor'])
-#         bt_prod= float (request.form['bt_prod'])
+            elif dmtype.upper() == 'DPSK':
+                plots = DPSK(Tb,Ac, fc, inputBinarySeq)
 
-#         inputs = {"a":a,"fc":fc,"omsp_factor":osmp_factor,"bt_prod":bt_prod}
-#         if dmtype.upper() == 'GMSK':
-#             plots = GMSK(a, fc, osmp_factor, bt_prod)
-    
-#     return render_template('GMSK_graphs.html',dmtype=dmtype.upper(),title=title[dmtype], plots=plots,inputs=inputs)    
+        except Exception:
+            errMsg = 'Unknown error occured. Make sure that the input values are correct'   
+
+    return render_template('DM_graphs.html',dmtype=dmtype.upper(),title=title[dmtype], plots=plots,inputs=inputs, errMsg=errMsg)
+
 
 
 @app.route('/DM3/<dmtype>', methods=['GET','POST']) # get and post for dpsk
@@ -266,10 +255,6 @@ def PulseModulation(pmtype):
     inputs = []
     print(request.form)
     if (request.method=='POST'): 
-        # fm = int (request.form['fm'])
-        # am = int (request.form['am'])
-        # fc = int (request.form['fc'])
-        # ac = int (request.form['ac'])
         fm = int (request.form['fm'])
         am = int (request.form['am'])
         message_type = str(request.form["message_signal"])
@@ -279,11 +264,9 @@ def PulseModulation(pmtype):
       # Change Binary string to array
         print(pmtype)
         if pmtype.upper() == 'PPM':
-            # inputs.append(int(request.form['ql']))
             inputs.append(int(request.form['fs']))
             ppm_ratio = float(request.form['ppm_ratio'])        
             inputs.append(ppm_ratio)
-            # inputs.append(int(request.form['nb']))
             plots = PPM(inputs)
         elif pmtype.upper() == 'PAM':
           inputs.append(int(request.form['fs']))
@@ -295,8 +278,6 @@ def PulseModulation(pmtype):
           inputs.append(int(request.form['ql']))
           inputs.append(int(request.form['nb']))
           a,b,c,encoded= PCM(inputs)
-          #encoded = "encoded"
-          #encoded_str = ''.join(encoded)
           plots = [a,b,c]
         elif pmtype.upper() == 'SAMPLING':
           inputs.append(int(request.form['fs']))
@@ -305,18 +286,12 @@ def PulseModulation(pmtype):
           inputs.append(int(request.form['ql']))
           plots = QUANTIZATION(inputs)
 
-        # elif pmtype.upper() == 'BPSK':
-        #   plots = BPSK(Tb, fc, inputBinarySeq)
-        # elif pmtype.upper() == 'QPSK':
-        #   plots = QPSK(Tb, fc, inputBinarySeq)
 
     if(pmtype != "PCM"):
         return render_template('PM_graphs.html',pmtype=pmtype.upper(),title=title[pmtype], plots=plots)
     else:
         return render_template('PM_graphs.html',pmtype=pmtype.upper(),title=title[pmtype], plots=plots, encoded=encoded)
  
-
-
 
 def create_app():
     # PORT = int(os.environ.get("PORT",8000))

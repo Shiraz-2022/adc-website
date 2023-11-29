@@ -17,7 +17,7 @@
           {% if pmtype == "PCM" %}
           <li>The number of bits represents the number of bits of the encoded signal that you can see.</li>
           {% else %}
-          <li>Keep the pulse frequency according to the message frequency. Higher pulse frequency for higher message frequency.</li>
+          <li>Keep the pulse frequency according to the message frequency. Higher pulse frequency for higher message frequencies.</li>
           {% endif %}
         </ol>
       </div>
@@ -31,7 +31,9 @@
           <select name="message_signal" class="input-bar">
             <option value="sin">Sin</option>
             <option value="cos" selected>Cos</option>
+            {% if pmtype != "QUANTIZATION" %}
             <option value="tri">Triangle</option>
+            {% endif %}
           </select>
         </div>
         <div class="input-wrapper">

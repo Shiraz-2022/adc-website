@@ -84,9 +84,9 @@ def AM_double_sideband_modulation(inputs):
     a = plot_graph(condition = condition, x = x_message, y = message, title = "Message Signal", color = 'y')
     b = plot_graph(condition = condition, x = x_carrier, y = carrier, title = "Carrier Signal", color = 'g')
     c = plot_graph(condition = condition, x = x_modulated, y = modulated_wave, title = "Modulated wave", color ='r')
-    d = plot_graph(condition = condition, x = x_message, y = demodulated_wave, title="demodulated wave", color = 'm')
+    # d = plot_graph(condition = condition, x = x_message, y = demodulated_wave, title="demodulated wave", color = 'm')
 
-    return [a,b,c,d]
+    return [a,b,c]
 
 
 
@@ -119,9 +119,9 @@ def AM_ssb_modulation(inputs):
     b = plot_graph(condition = condition, x = x_carrier, y = carrier,color='m', title = "Carrier Signal")
     c = plot_graph(condition = condition, x = x_modulated, y = modulated_positive, color='r', title = "Modulated wave 1",text="upper Sideband")
     d = plot_graph(condition = condition, x = x_modulated, y = modulated_negative, color='b', title = "Modulated wave 2",text="lower Sideband")
-    e = plot_graph(condition = condition, x = x_message, y=demodulated_wave,color='r', title="demodulated wave")
+    # e = plot_graph(condition = condition, x = x_message, y=demodulated_wave,color='r', title="demodulated wave")
     
-    return [a,b,c,d,e]
+    return [a,b,c,d]
 
 def AM_QAM(inputs):
     Am,Ac,fm,fc,message_signal,message_signal_2 = inputs.values()
@@ -165,7 +165,7 @@ def AM_QAM(inputs):
     d = plot_graph(condition = condition,x = x_carrier, y = c2,color='y', title = "Carrier Signal-2")
     e = plot_graph(condition = condition,x = x_modulated, y = modulated_wave_1,color='r', title = "Modulated wave - 1")
     f = plot_graph(condition = condition,x = x_modulated, y = modulated_wave_2,color='r', title = "Modulated wave - 2")
-    g = plot_graph(condition = condition,x = x_message, y=demodulated_wave_1,color='r', title="demodulated wave - 1")
-    h = plot_graph(condition = condition,x = x_message, y=demodulated_wave_2,color='c', title="demodulated wave - 2")
+    # g = plot_graph(condition = condition,x = x_message, y=demodulated_wave_1,color='r', title="demodulated wave - 1")
+    # h = plot_graph(condition = condition,x = x_message, y=demodulated_wave_2,color='c', title="demodulated wave - 2")
     
-    return [a,b,c,d,e,f,g,h]
+    return [a,b,c,d,e,f]
