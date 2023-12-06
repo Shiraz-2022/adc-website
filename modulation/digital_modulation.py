@@ -124,13 +124,12 @@ def BASK(Tb, fc,Ac1,Ac2, inputBinarySeq):
 
 def BFSK(Tb,Ac, fc1, fc2, inputBinarySeq):
     # Binary Information
-    x = inputBinarySeq.reshape(-1, 1) # By using -1, NumPy will automatically calculate the appropriate number of rows and 1 is no fo columns
+    x = inputBinarySeq.reshape(-1, 1)
   
     bp = Tb #but period
     condition = "line"
     fc1 = round_to_nearest_multiple(fc1)
     fc2 = round_to_nearest_multiple(fc2)
-    # Representation of transmitting binary information as digital signal
     bit = np.array([])
     
     for n in range(len(x)):
@@ -147,13 +146,13 @@ def BFSK(Tb,Ac, fc1, fc2, inputBinarySeq):
     # Binary-FSK modulation
     # A = np.sqrt(2 / Tb)  # Amplitude of carrier signal
     br = 1 / bp  # bit rate
-    f1 = br * fc1  # carrier frequency for information as 1
-    f2 = br * fc2  # carrier frequency for information as 0
+    # f1 = br * fc1  # carrier frequency for information as 1
+    # f2 = br * fc2  # carrier frequency for information as 0
 
-    if f2>f1:
-        fDigits = countNoOfDigits(f2)
+    if fc2>fc1:
+        fDigits = countNoOfDigits(fc2)
     else:
-        fDigits = countNoOfDigits(f1)    
+        fDigits = countNoOfDigits(fc1)    
 
     space = countSpace(fDigits) * 9    
 
@@ -161,9 +160,9 @@ def BFSK(Tb,Ac, fc1, fc2, inputBinarySeq):
     m = np.array([])
     for i in range(len(x)):
         if x[i] == 1:
-            y = Ac * np.cos(2 * np.pi * f1 * t2)
+            y = Ac * np.cos(2 * np.pi * fc1 * t2)
         else:
-            y = Ac * np.cos(2 * np.pi * f2 * t2)
+            y = Ac * np.cos(2 * np.pi * fc2 * t2)
         m = np.concatenate((m, y))
 
 
@@ -381,14 +380,14 @@ def DPSK(Tb,Ac, fc, inputBinarySeq):
         if x[n] == 1:
             se = np.ones(100)
         else:
-            se = np.zeros(100)
+            se = -np.ones(100)
         bit = np.concatenate([bit, se])
 
     t1 = np.arange(bp / 100, 100 * len(x) * (bp / 100) + bp / 100, bp / 100)
     plt.subplot(3, 1, 1)
     plt.plot(t1, bit, linewidth=2.5)
     plt.grid(True)
-    plt.axis([0, bp * len(x), -1, 2])
+    plt.axis([0, bp * len(x), -2, 2])
     plt.ylabel("Amplitude(V)")
     plt.xlabel("Time(ms)")
     plt.title("Message Signal")

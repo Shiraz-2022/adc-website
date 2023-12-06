@@ -136,16 +136,15 @@ def AM_ssb_modulation(inputs):
 
 def AM_QAM(inputs):
     Am,Ac,fm,fc,message_signal,message_signal_2 = inputs.values()
+
     condition="line"
     x_carrier = create_domain_AM()
     x_message = create_domain_AM()
-    x_modulated = create_domain_AM() #x_carrier if(len(x_carrier)<len(x_message)) else x_message
+    x_modulated = create_domain_AM()
 
     fm = round_to_nearest_multiple(fm)
     fc = round_to_nearest_multiple(fc)
 
-    c1 = Ac*np.cos(2*np.pi*fc*x_carrier) #carrier 1
-    c2 = Ac*np.sin(2*np.pi*fc*x_carrier) #carrier 2
 
     if message_signal=="sin":
         m1 = Am*np.sin(2*np.pi*fm*x_message)
@@ -162,13 +161,12 @@ def AM_QAM(inputs):
         m1 = triangular(x_message, Am)
 
 
+    c1 = Ac*np.cos(2*np.pi*fc*x_carrier) 
+    c2 = Ac*np.sin(2*np.pi*fc*x_carrier) 
+
     modulated_wave_1 = c1 * m1
     modulated_wave_2 = c2 * m2  
 
-    demodulated_wave_1 = modulated_wave_1 * np.cos(2 * np.pi * fc * x_modulated)
-    demodulated_wave_2 = modulated_wave_2 * np.sin(2 * np.pi * fc * x_modulated)  
-    
-    modulated_wave = modulated_wave_1 + modulated_wave_2
 
     a = plot_graph(condition = condition,x = x_message, y = m1,color='b', title = "Message Signal-1")
     b = plot_graph(condition = condition,x = x_message, y = m2,color='g', title = "Message Signal-2")
@@ -176,7 +174,5 @@ def AM_QAM(inputs):
     d = plot_graph(condition = condition,x = x_carrier, y = c2,color='y', title = "Carrier Signal-2")
     e = plot_graph(condition = condition,x = x_modulated, y = modulated_wave_1,color='r', title = "Modulated wave - 1")
     f = plot_graph(condition = condition,x = x_modulated, y = modulated_wave_2,color='r', title = "Modulated wave - 2")
-    # g = plot_graph(condition = condition,x = x_message, y=demodulated_wave_1,color='r', title="demodulated wave - 1")
-    # h = plot_graph(condition = condition,x = x_message, y=demodulated_wave_2,color='c', title="demodulated wave - 2")
     
     return [a,b,c,d,e,f]

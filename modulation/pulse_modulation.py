@@ -267,11 +267,6 @@ def SAMPLING(inputs):
     fm = round_to_nearest_multiple(fm)
     fs = round_to_nearest_multiple(fs)
 
-    pulse_width = 0.01  # Pulse width in seconds
-    pulse_period = 0.1  # Pulse period in seconds
-    duration = 1.0  # Duration of the signal in seconds
-    sampling_rate = 1000000  # Sampling rate in Hz
-
 
     if fs <= 40000:
         t = np.linspace(-10, 10, 1000000)
